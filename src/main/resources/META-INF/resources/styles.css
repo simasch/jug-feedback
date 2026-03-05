@@ -9,31 +9,36 @@ html {
     --lumo-body-text-color: #333333;
 
     --lumo-base-color: #ffffff;
-    --lumo-contrast-5pct: #fbfbfb;
+    --lumo-contrast-5pct: #F3F3F3;
 
     --lumo-border-radius-m: 4px;
     --lumo-border-radius-l: 6px;
 }
 
 h2 {
-    font-family: "Arial Narrow", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #930722;
+    line-height: 120%;
 }
 
 h3 {
-    font-family: "Arial Narrow", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
     color: #333333;
 }
 
 vaadin-button[theme~="primary"] {
     background-color: #930722;
     color: #ffffff;
+    text-transform: uppercase;
+    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+    letter-spacing: 0.05em;
 }
 
 vaadin-button[theme~="primary"]:hover {
-    background-color: #7a0620;
+    background-color: #9C0523;
 }
 
 vaadin-grid::part(header-cell) {
@@ -49,10 +54,29 @@ vaadin-grid::part(row):hover {
     background-color: rgba(147, 7, 34, 0.05);
 }
 
+vaadin-grid::part(cell) {
+    border-bottom: 1px solid #BFBFBF;
+}
+
+vaadin-text-field::part(input-field),
+vaadin-email-field::part(input-field),
+vaadin-text-area::part(input-field),
+vaadin-combo-box::part(input-field) {
+    border: 1px solid #DDDDDD;
+    background-color: #F1F1F1;
+}
+
 vaadin-text-field::part(input-field):focus-within,
 vaadin-email-field::part(input-field):focus-within,
 vaadin-text-area::part(input-field):focus-within,
 vaadin-combo-box::part(input-field):focus-within {
     border-color: #930722;
     box-shadow: 0 0 0 1px #930722;
+    background-color: #ffffff;
+}
+
+hr {
+    border: none;
+    border-top: 2px solid #BFBFBF;
+    margin: 10px 0;
 }
