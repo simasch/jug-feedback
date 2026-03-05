@@ -221,10 +221,25 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         Span urlSpan = new Span(formUrl);
         urlSpan.getStyle().set("word-break", "break-all");
 
-        Button copyButton = new Button(getTranslation("dashboard.qr.copy-url"), e -> {
-            UI.getCurrent().getPage().executeJs("navigator.clipboard.writeText($0)", formUrl);
-            Notification.show(getTranslation("dashboard.qr.copied"), 2000, Notification.Position.BOTTOM_START);
-        });
+        Button copyButton = new Button(getTranslation("dashboard.qr.copy-url"));
+        copyButton.getElement().executeJs("""
+                this.addEventListener('click', function() {
+                    var url = $0;
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(url);
+                    } else {
+                        var ta = document.createElement('textarea');
+                        ta.value = url;
+                        ta.style.position = 'fixed';
+                        ta.style.left = '-9999px';
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                })""", formUrl);
+        copyButton.addClickListener(e ->
+                Notification.show(getTranslation("dashboard.qr.copied"), 2000, Notification.Position.BOTTOM_START));
 
         VerticalLayout dialogContent = new VerticalLayout(qrImage, urlSpan, copyButton);
         dialogContent.setAlignItems(Alignment.CENTER);
