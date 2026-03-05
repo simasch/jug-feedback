@@ -1,0 +1,58 @@
+html {
+    --lumo-primary-color: #930722;
+    --lumo-primary-color-50pct: rgba(147, 7, 34, 0.5);
+    --lumo-primary-color-10pct: rgba(147, 7, 34, 0.1);
+    --lumo-primary-text-color: #930722;
+
+    --lumo-font-family: Arial, Helvetica, sans-serif;
+    --lumo-header-text-color: #333333;
+    --lumo-body-text-color: #333333;
+
+    --lumo-base-color: #ffffff;
+    --lumo-contrast-5pct: #fbfbfb;
+
+    --lumo-border-radius-m: 4px;
+    --lumo-border-radius-l: 6px;
+}
+
+h2 {
+    font-family: "Arial Narrow", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #930722;
+}
+
+h3 {
+    font-family: "Arial Narrow", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+    color: #333333;
+}
+
+vaadin-button[theme~="primary"] {
+    background-color: #930722;
+    color: #ffffff;
+}
+
+vaadin-button[theme~="primary"]:hover {
+    background-color: #7a0620;
+}
+
+vaadin-grid::part(header-cell) {
+    background-color: #930722;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: var(--lumo-font-size-s);
+    letter-spacing: 0.05em;
+}
+
+vaadin-grid::part(row):hover {
+    background-color: rgba(147, 7, 34, 0.05);
+}
+
+vaadin-text-field::part(input-field):focus-within,
+vaadin-email-field::part(input-field):focus-within,
+vaadin-text-area::part(input-field):focus-within,
+vaadin-combo-box::part(input-field):focus-within {
+    border-color: #930722;
+    box-shadow: 0 0 0 1px #930722;
+}
