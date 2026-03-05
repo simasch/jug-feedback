@@ -18,7 +18,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.streams.DownloadHandler;
 import com.vaadin.flow.server.streams.DownloadResponse;
@@ -30,9 +30,8 @@ import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @Route("")
-@PageTitle("Dashboard - JUG Feedback")
 @PermitAll
-public class DashboardView extends VerticalLayout {
+public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
     private final FormService formService;
     private final QrCodeService qrCodeService;
@@ -45,8 +44,8 @@ public class DashboardView extends VerticalLayout {
         setSizeFull();
         setPadding(true);
 
-        H2 title = new H2("JUG Feedback Forms");
-        Button createButton = new Button("Create New Form", e -> showCreateDialog());
+        H2 title = new H2(getTranslation("dashboard.title"));
+        Button createButton = new Button(getTranslation("dashboard.create-new"), e -> showCreateDialog());
         createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         HorizontalLayout header = new HorizontalLayout(title, createButton);
@@ -55,24 +54,29 @@ public class DashboardView extends VerticalLayout {
         header.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
         grid = new Grid<>(FeedbackForm.class, false);
-        grid.addColumn(FeedbackForm::getTitle).setHeader("Title").setAutoWidth(true);
-        grid.addColumn(FeedbackForm::getSpeakerName).setHeader("Speaker").setAutoWidth(true);
-        grid.addColumn(FeedbackForm::getTopic).setHeader("Topic").setAutoWidth(true);
-        grid.addColumn(form -> form.getStatus().name()).setHeader("Status").setAutoWidth(true);
+        grid.addColumn(FeedbackForm::getTitle).setHeader(getTranslation("dashboard.column.title")).setAutoWidth(true);
+        grid.addColumn(FeedbackForm::getSpeakerName).setHeader(getTranslation("dashboard.column.speaker")).setAutoWidth(true);
+        grid.addColumn(FeedbackForm::getTopic).setHeader(getTranslation("dashboard.column.topic")).setAutoWidth(true);
+        grid.addColumn(form -> form.getStatus().name()).setHeader(getTranslation("dashboard.column.status")).setAutoWidth(true);
         grid.addColumn(form -> {
             String currentUser = getCurrentUserEmail();
             if (currentUser.equals(form.getOwnerEmail())) {
-                return "Owner";
+                return getTranslation("dashboard.access.owner");
             }
-            return "Shared";
-        }).setHeader("Access").setAutoWidth(true);
-        grid.addColumn(form -> formService.getResponseCount(form.getId()) + " responses")
-                .setHeader("Responses").setAutoWidth(true);
-        grid.addComponentColumn(this::createActionButtons).setHeader("Actions").setAutoWidth(true);
+            return getTranslation("dashboard.access.shared");
+        }).setHeader(getTranslation("dashboard.column.access")).setAutoWidth(true);
+        grid.addColumn(form -> getTranslation("dashboard.responses", formService.getResponseCount(form.getId())))
+                .setHeader(getTranslation("dashboard.column.responses")).setAutoWidth(true);
+        grid.addComponentColumn(this::createActionButtons).setHeader("").setAutoWidth(true);
         grid.setSizeFull();
 
         add(header, grid);
         refreshGrid();
+    }
+
+    @Override
+    public String getPageTitle() {
+        return getTranslation("dashboard.page-title");
     }
 
     private String getCurrentUserEmail() {
@@ -88,10 +92,10 @@ public class DashboardView extends VerticalLayout {
         String currentUser = getCurrentUserEmail();
         boolean isOwner = currentUser.equals(form.getOwnerEmail());
 
-        Button resultsButton = new Button("Results", e -> UI.getCurrent().navigate(ResultsView.class, form.getId()));
+        Button resultsButton = new Button(getTranslation("dashboard.action.results"), e -> UI.getCurrent().navigate(ResultsView.class, form.getId()));
         resultsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-        Button qrButton = new Button("QR Code", e -> showQrDialog(form));
+        Button qrButton = new Button(getTranslation("dashboard.action.qr-code"), e -> showQrDialog(form));
         qrButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         if (!isOwner) {
@@ -99,34 +103,34 @@ public class DashboardView extends VerticalLayout {
             return buttons;
         }
 
-        Button shareButton = new Button("Share", e -> showShareDialog(form));
+        Button shareButton = new Button(getTranslation("dashboard.action.share"), e -> showShareDialog(form));
         shareButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         if (form.getStatus() == FormStatus.DRAFT) {
-            Button editButton = new Button("Edit", e -> UI.getCurrent().navigate(FormEditorView.class, form.getId()));
+            Button editButton = new Button(getTranslation("dashboard.action.edit"), e -> UI.getCurrent().navigate(FormEditorView.class, form.getId()));
             editButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-            Button publishButton = new Button("Publish", e -> {
+            Button publishButton = new Button(getTranslation("dashboard.action.publish"), e -> {
                 formService.publishForm(form.getId());
                 refreshGrid();
             });
             publishButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_SUCCESS);
             buttons.add(editButton, publishButton, qrButton, resultsButton, shareButton);
         } else if (form.getStatus() == FormStatus.PUBLIC) {
-            Button closeButton = new Button("Close", e -> {
+            Button closeButton = new Button(getTranslation("dashboard.action.close"), e -> {
                 formService.closeForm(form.getId());
                 refreshGrid();
             });
             closeButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
             buttons.add(closeButton, qrButton, resultsButton, shareButton);
         } else {
-            Button reopenButton = new Button("Reopen", e -> {
+            Button reopenButton = new Button(getTranslation("dashboard.action.reopen"), e -> {
                 formService.reopenForm(form.getId());
                 refreshGrid();
             });
             reopenButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-            Button deleteButton = new Button("Delete", e -> {
+            Button deleteButton = new Button(getTranslation("dashboard.action.delete"), e -> {
                 formService.deleteForm(form.getId());
                 refreshGrid();
             });
@@ -139,7 +143,7 @@ public class DashboardView extends VerticalLayout {
 
     private void showShareDialog(FeedbackForm form) {
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Share - " + form.getTitle());
+        dialog.setHeaderTitle(getTranslation("dashboard.share.title", form.getTitle()));
 
         VerticalLayout content = new VerticalLayout();
         content.setPadding(false);
@@ -153,7 +157,7 @@ public class DashboardView extends VerticalLayout {
             HorizontalLayout row = new HorizontalLayout();
             row.setAlignItems(Alignment.CENTER);
             Span emailSpan = new Span(share.getSharedWithEmail());
-            Button removeBtn = new Button("Remove", e -> {
+            Button removeBtn = new Button(getTranslation("dashboard.share.remove"), e -> {
                 formService.unshareForm(form.getId(), share.getSharedWithEmail());
                 dialog.close();
                 showShareDialog(form);
@@ -164,24 +168,24 @@ public class DashboardView extends VerticalLayout {
         }
 
         if (shares.isEmpty()) {
-            shareList.add(new Span("Not shared with anyone yet."));
+            shareList.add(new Span(getTranslation("dashboard.share.empty")));
         }
 
-        EmailField emailField = new EmailField("Share with email");
+        EmailField emailField = new EmailField(getTranslation("dashboard.share.email"));
         emailField.setWidthFull();
 
-        Button addButton = new Button("Share", e -> {
+        Button addButton = new Button(getTranslation("dashboard.share.button"), e -> {
             String email = emailField.getValue().trim();
             if (email.isEmpty() || emailField.isInvalid()) {
-                Notification.show("Please enter a valid email", 3000, Notification.Position.MIDDLE);
+                Notification.show(getTranslation("dashboard.share.error.invalid-email"), 3000, Notification.Position.MIDDLE);
                 return;
             }
             if (email.equals(form.getOwnerEmail())) {
-                Notification.show("You cannot share with yourself", 3000, Notification.Position.MIDDLE);
+                Notification.show(getTranslation("dashboard.share.error.self"), 3000, Notification.Position.MIDDLE);
                 return;
             }
             formService.shareForm(form.getId(), email);
-            Notification.show("Form shared with " + email, 3000, Notification.Position.BOTTOM_START);
+            Notification.show(getTranslation("dashboard.share.success", email), 3000, Notification.Position.BOTTOM_START);
             dialog.close();
             showShareDialog(form);
         });
@@ -199,7 +203,7 @@ public class DashboardView extends VerticalLayout {
 
     private void showQrDialog(FeedbackForm form) {
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("QR Code - " + form.getTitle());
+        dialog.setHeaderTitle(getTranslation("dashboard.qr.title", form.getTitle()));
 
         var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
         String formUrl = request.getScheme() + "://" + request.getServerName()
@@ -217,34 +221,34 @@ public class DashboardView extends VerticalLayout {
         Span urlSpan = new Span(formUrl);
         urlSpan.getStyle().set("word-break", "break-all");
 
-        Button copyButton = new Button("Copy URL", e -> {
+        Button copyButton = new Button(getTranslation("dashboard.qr.copy-url"), e -> {
             UI.getCurrent().getPage().executeJs("navigator.clipboard.writeText($0)", formUrl);
-            Notification.show("URL copied!", 2000, Notification.Position.BOTTOM_START);
+            Notification.show(getTranslation("dashboard.qr.copied"), 2000, Notification.Position.BOTTOM_START);
         });
 
-        VerticalLayout content = new VerticalLayout(qrImage, urlSpan, copyButton);
-        content.setAlignItems(Alignment.CENTER);
+        VerticalLayout dialogContent = new VerticalLayout(qrImage, urlSpan, copyButton);
+        dialogContent.setAlignItems(Alignment.CENTER);
 
-        dialog.add(content);
+        dialog.add(dialogContent);
         dialog.setCloseOnOutsideClick(true);
         dialog.open();
     }
 
     private void showCreateDialog() {
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Create New Form");
+        dialog.setHeaderTitle(getTranslation("dashboard.create.title"));
 
-        TextField titleField = new TextField("Form Title");
+        TextField titleField = new TextField(getTranslation("dashboard.create.form-title"));
         titleField.setWidthFull();
         titleField.setRequired(true);
 
-        TextField speakerField = new TextField("Speaker Name");
+        TextField speakerField = new TextField(getTranslation("dashboard.create.speaker"));
         speakerField.setWidthFull();
 
-        TextField topicField = new TextField("Topic");
+        TextField topicField = new TextField(getTranslation("dashboard.create.topic"));
         topicField.setWidthFull();
 
-        Button createButton = new Button("Create", e -> {
+        Button createButton = new Button(getTranslation("dashboard.create.button"), e -> {
             if (titleField.getValue().trim().isEmpty()) {
                 titleField.setInvalid(true);
                 return;
@@ -257,11 +261,11 @@ public class DashboardView extends VerticalLayout {
             );
             dialog.close();
             refreshGrid();
-            Notification.show("Form created successfully", 3000, Notification.Position.BOTTOM_START);
+            Notification.show(getTranslation("dashboard.create.success"), 3000, Notification.Position.BOTTOM_START);
         });
         createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        Button cancelButton = new Button(getTranslation("dashboard.create.cancel"), e -> dialog.close());
 
         VerticalLayout content = new VerticalLayout(titleField, speakerField, topicField);
         content.setPadding(false);
@@ -271,5 +275,6 @@ public class DashboardView extends VerticalLayout {
         dialog.add(content);
         dialog.getFooter().add(footer);
         dialog.open();
+        titleField.focus();
     }
 }

@@ -19,9 +19,8 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Route("editor")
-@PageTitle("Form Editor - JUG Feedback")
 @PermitAll
-public class FormEditorView extends VerticalLayout implements HasUrlParameter<Long> {
+public class FormEditorView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
     private final FormService formService;
     private FeedbackForm currentForm;
@@ -34,6 +33,11 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
         this.formService = formService;
         setSizeFull();
         setPadding(true);
+    }
+
+    @Override
+    public String getPageTitle() {
+        return getTranslation("editor.page-title");
     }
 
     @Override
@@ -52,24 +56,24 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
     private void buildView() {
         removeAll();
 
-        Button backButton = new Button("← Back to Dashboard",
+        Button backButton = new Button(getTranslation("editor.back"),
             e -> UI.getCurrent().navigate(DashboardView.class));
 
-        H2 title = new H2("Edit Form: " + currentForm.getTitle());
+        H2 title = new H2(getTranslation("editor.title", currentForm.getTitle()));
 
-        titleField = new TextField("Form Title");
+        titleField = new TextField(getTranslation("editor.form-title"));
         titleField.setValue(currentForm.getTitle() != null ? currentForm.getTitle() : "");
         titleField.setWidth("300px");
 
-        speakerField = new TextField("Speaker Name");
+        speakerField = new TextField(getTranslation("editor.speaker"));
         speakerField.setValue(currentForm.getSpeakerName() != null ? currentForm.getSpeakerName() : "");
         speakerField.setWidth("300px");
 
-        topicField = new TextField("Topic");
+        topicField = new TextField(getTranslation("editor.topic"));
         topicField.setValue(currentForm.getTopic() != null ? currentForm.getTopic() : "");
         topicField.setWidth("300px");
 
-        Button saveButton = new Button("Save Form Details", e -> saveFormDetails());
+        Button saveButton = new Button(getTranslation("editor.save"), e -> saveFormDetails());
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         HorizontalLayout formFields = new HorizontalLayout(titleField, speakerField, topicField, saveButton);
@@ -77,20 +81,20 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
         formFields.setWidthFull();
 
         questionGrid = new Grid<>(FeedbackQuestion.class, false);
-        questionGrid.addColumn(FeedbackQuestion::getOrderIndex).setHeader("#").setWidth("60px");
-        questionGrid.addColumn(FeedbackQuestion::getQuestionText).setHeader("Question").setAutoWidth(true);
-        questionGrid.addColumn(q -> q.getQuestionType().name()).setHeader("Type").setWidth("100px");
+        questionGrid.addColumn(FeedbackQuestion::getOrderIndex).setHeader(getTranslation("editor.column.order")).setWidth("60px");
+        questionGrid.addColumn(FeedbackQuestion::getQuestionText).setHeader(getTranslation("editor.column.question")).setAutoWidth(true);
+        questionGrid.addColumn(q -> q.getQuestionType().name()).setHeader(getTranslation("editor.column.type")).setWidth("100px");
         questionGrid.setItems(currentForm.getQuestions());
         questionGrid.setHeight("400px");
 
-        TextField newQuestionText = new TextField("New Question");
+        TextField newQuestionText = new TextField(getTranslation("editor.new-question"));
         newQuestionText.setWidth("400px");
 
-        ComboBox<QuestionType> newQuestionType = new ComboBox<>("Type");
+        ComboBox<QuestionType> newQuestionType = new ComboBox<>(getTranslation("editor.new-question.type"));
         newQuestionType.setItems(QuestionType.values());
         newQuestionType.setValue(QuestionType.RATING);
 
-        Button addQuestionBtn = new Button("Add Question", e -> {
+        Button addQuestionBtn = new Button(getTranslation("editor.add-question"), e -> {
             if (!newQuestionText.getValue().trim().isEmpty()) {
                 FeedbackQuestion q = new FeedbackQuestion();
                 q.setForm(currentForm);
@@ -117,6 +121,6 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
         currentForm.setSpeakerName(speakerField.getValue().trim());
         currentForm.setTopic(topicField.getValue().trim());
         formService.saveForm(currentForm);
-        Notification.show("Form saved", 2000, Notification.Position.BOTTOM_START);
+        Notification.show(getTranslation("editor.saved"), 2000, Notification.Position.BOTTOM_START);
     }
 }

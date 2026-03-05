@@ -19,9 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 
 @Route("results")
-@PageTitle("Results - JUG Feedback")
 @PermitAll
-public class ResultsView extends VerticalLayout implements HasUrlParameter<Long> {
+public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
     private final FormService formService;
 
@@ -29,6 +28,11 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
         this.formService = formService;
         setSizeFull();
         setPadding(true);
+    }
+
+    @Override
+    public String getPageTitle() {
+        return getTranslation("results.page-title");
     }
 
     @Override
@@ -44,21 +48,21 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
     private void buildView(FeedbackForm form) {
         removeAll();
 
-        Button backButton = new Button("← Back to Dashboard",
+        Button backButton = new Button(getTranslation("results.back"),
             e -> UI.getCurrent().navigate(DashboardView.class));
 
-        H2 title = new H2("Results: " + form.getTitle());
+        H2 title = new H2(getTranslation("results.title", form.getTitle()));
         add(backButton, title);
 
         if (form.getSpeakerName() != null && !form.getSpeakerName().isEmpty()) {
-            add(new Span("Speaker: " + form.getSpeakerName()));
+            add(new Span(getTranslation("results.speaker", form.getSpeakerName())));
         }
 
         long responseCount = formService.getResponseCount(form.getId());
-        add(new Paragraph("Total responses: " + responseCount));
+        add(new Paragraph(getTranslation("results.total-responses", responseCount)));
 
         if (responseCount == 0) {
-            add(new Paragraph("No responses yet."));
+            add(new Paragraph(getTranslation("results.no-responses")));
             return;
         }
 
@@ -68,13 +72,13 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
             if (question.getQuestionType() == QuestionType.RATING) {
                 Double avg = formService.getAverageRating(question.getId());
                 if (avg != null) {
-                    add(new Paragraph("Average rating: " + String.format("%.2f", avg) + " / 5"));
+                    add(new Paragraph(getTranslation("results.average-rating", String.format("%.2f", avg))));
                 }
             } else {
                 List<FeedbackAnswer> textAnswers = formService.getTextAnswers(question.getId());
                 for (FeedbackAnswer answer : textAnswers) {
                     if (answer.getTextValue() != null && !answer.getTextValue().trim().isEmpty()) {
-                        Paragraph p = new Paragraph("• " + answer.getTextValue());
+                        Paragraph p = new Paragraph("\u2022 " + answer.getTextValue());
                         p.getStyle().set("margin-left", "20px");
                         add(p);
                     }
