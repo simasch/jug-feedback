@@ -4,6 +4,8 @@ import ch.martinelli.jug.feedback.entity.AccessToken;
 import ch.martinelli.jug.feedback.repository.AccessTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +20,11 @@ public class TokenService {
     private static final SecureRandom random = new SecureRandom();
 
     private final AccessTokenRepository tokenRepository;
+    private final JavaMailSender mailSender;
 
-    public TokenService(AccessTokenRepository tokenRepository) {
+    public TokenService(AccessTokenRepository tokenRepository, JavaMailSender mailSender) {
         this.tokenRepository = tokenRepository;
+        this.mailSender = mailSender;
     }
 
     @Transactional
@@ -32,9 +36,14 @@ public class TokenService {
         token.setExpiresAt(LocalDateTime.now().plusMinutes(10));
         tokenRepository.save(token);
 
-        logger.info("=================================================");
-        logger.info("Login code for {}: {}", email, code);
-        logger.info("=================================================");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("simon.martinelli@jug.ch");
+        message.setTo(email);
+        message.setSubject("JUG Feedback - Your Login Code");
+        message.setText("Your login code is: " + code + "\n\nThis code expires in 10 minutes.");
+        mailSender.send(message);
+
+        logger.info("Login code sent to {}", email);
     }
 
     @Transactional
