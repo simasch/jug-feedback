@@ -28,6 +28,8 @@ public class FeedbackForm {
     @Column(unique = true, nullable = false)
     private String publicToken = UUID.randomUUID().toString();
 
+    private String ownerEmail;
+
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -52,6 +54,9 @@ public class FeedbackForm {
 
     public String getPublicToken() { return publicToken; }
     public void setPublicToken(String publicToken) { this.publicToken = publicToken; }
+
+    public String getOwnerEmail() { return ownerEmail; }
+    public void setOwnerEmail(String ownerEmail) { this.ownerEmail = ownerEmail; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

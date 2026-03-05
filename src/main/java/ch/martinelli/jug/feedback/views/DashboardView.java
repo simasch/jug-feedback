@@ -1,6 +1,7 @@
 package ch.martinelli.jug.feedback.views;
 
 import ch.martinelli.jug.feedback.entity.FeedbackForm;
+import ch.martinelli.jug.feedback.entity.FormShare;
 import ch.martinelli.jug.feedback.entity.FormStatus;
 import ch.martinelli.jug.feedback.service.FormService;
 import ch.martinelli.jug.feedback.service.QrCodeService;
@@ -15,13 +16,18 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.streams.DownloadHandler;
+import com.vaadin.flow.server.streams.DownloadResponse;
+import com.vaadin.flow.server.VaadinServletRequest;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 @Route("")
 @PageTitle("Dashboard - JUG Feedback")
@@ -53,8 +59,15 @@ public class DashboardView extends VerticalLayout {
         grid.addColumn(FeedbackForm::getSpeakerName).setHeader("Speaker").setAutoWidth(true);
         grid.addColumn(FeedbackForm::getTopic).setHeader("Topic").setAutoWidth(true);
         grid.addColumn(form -> form.getStatus().name()).setHeader("Status").setAutoWidth(true);
+        grid.addColumn(form -> {
+            String currentUser = getCurrentUserEmail();
+            if (currentUser.equals(form.getOwnerEmail())) {
+                return "Owner";
+            }
+            return "Shared";
+        }).setHeader("Access").setAutoWidth(true);
         grid.addColumn(form -> formService.getResponseCount(form.getId()) + " responses")
-            .setHeader("Responses").setAutoWidth(true);
+                .setHeader("Responses").setAutoWidth(true);
         grid.addComponentColumn(this::createActionButtons).setHeader("Actions").setAutoWidth(true);
         grid.setSizeFull();
 
@@ -62,15 +75,18 @@ public class DashboardView extends VerticalLayout {
         refreshGrid();
     }
 
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     private void refreshGrid() {
-        grid.setItems(formService.getAllForms());
+        grid.setItems(formService.getFormsForUser(getCurrentUserEmail()));
     }
 
     private HorizontalLayout createActionButtons(FeedbackForm form) {
         HorizontalLayout buttons = new HorizontalLayout();
-
-        Button editButton = new Button("Edit", e -> UI.getCurrent().navigate(FormEditorView.class, form.getId()));
-        editButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        String currentUser = getCurrentUserEmail();
+        boolean isOwner = currentUser.equals(form.getOwnerEmail());
 
         Button resultsButton = new Button("Results", e -> UI.getCurrent().navigate(ResultsView.class, form.getId()));
         resultsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -78,20 +94,31 @@ public class DashboardView extends VerticalLayout {
         Button qrButton = new Button("QR Code", e -> showQrDialog(form));
         qrButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
+        if (!isOwner) {
+            buttons.add(qrButton, resultsButton);
+            return buttons;
+        }
+
+        Button shareButton = new Button("Share", e -> showShareDialog(form));
+        shareButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
         if (form.getStatus() == FormStatus.DRAFT) {
+            Button editButton = new Button("Edit", e -> UI.getCurrent().navigate(FormEditorView.class, form.getId()));
+            editButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
             Button publishButton = new Button("Publish", e -> {
                 formService.publishForm(form.getId());
                 refreshGrid();
             });
             publishButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_SUCCESS);
-            buttons.add(editButton, publishButton, qrButton, resultsButton);
+            buttons.add(editButton, publishButton, qrButton, resultsButton, shareButton);
         } else if (form.getStatus() == FormStatus.PUBLIC) {
             Button closeButton = new Button("Close", e -> {
                 formService.closeForm(form.getId());
                 refreshGrid();
             });
             closeButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
-            buttons.add(closeButton, qrButton, resultsButton);
+            buttons.add(closeButton, qrButton, resultsButton, shareButton);
         } else {
             Button reopenButton = new Button("Reopen", e -> {
                 formService.reopenForm(form.getId());
@@ -104,21 +131,86 @@ public class DashboardView extends VerticalLayout {
                 refreshGrid();
             });
             deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
-            buttons.add(reopenButton, qrButton, resultsButton, deleteButton);
+            buttons.add(reopenButton, qrButton, resultsButton, shareButton, deleteButton);
         }
 
         return buttons;
+    }
+
+    private void showShareDialog(FeedbackForm form) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Share - " + form.getTitle());
+
+        VerticalLayout content = new VerticalLayout();
+        content.setPadding(false);
+
+        List<FormShare> shares = formService.getShares(form.getId());
+        VerticalLayout shareList = new VerticalLayout();
+        shareList.setPadding(false);
+        shareList.setSpacing(false);
+
+        for (FormShare share : shares) {
+            HorizontalLayout row = new HorizontalLayout();
+            row.setAlignItems(Alignment.CENTER);
+            Span emailSpan = new Span(share.getSharedWithEmail());
+            Button removeBtn = new Button("Remove", e -> {
+                formService.unshareForm(form.getId(), share.getSharedWithEmail());
+                dialog.close();
+                showShareDialog(form);
+            });
+            removeBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
+            row.add(emailSpan, removeBtn);
+            shareList.add(row);
+        }
+
+        if (shares.isEmpty()) {
+            shareList.add(new Span("Not shared with anyone yet."));
+        }
+
+        EmailField emailField = new EmailField("Share with email");
+        emailField.setWidthFull();
+
+        Button addButton = new Button("Share", e -> {
+            String email = emailField.getValue().trim();
+            if (email.isEmpty() || emailField.isInvalid()) {
+                Notification.show("Please enter a valid email", 3000, Notification.Position.MIDDLE);
+                return;
+            }
+            if (email.equals(form.getOwnerEmail())) {
+                Notification.show("You cannot share with yourself", 3000, Notification.Position.MIDDLE);
+                return;
+            }
+            formService.shareForm(form.getId(), email);
+            Notification.show("Form shared with " + email, 3000, Notification.Position.BOTTOM_START);
+            dialog.close();
+            showShareDialog(form);
+        });
+        addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        HorizontalLayout addRow = new HorizontalLayout(emailField, addButton);
+        addRow.setAlignItems(Alignment.BASELINE);
+        addRow.setWidthFull();
+
+        content.add(shareList, addRow);
+        dialog.add(content);
+        dialog.setCloseOnOutsideClick(true);
+        dialog.open();
     }
 
     private void showQrDialog(FeedbackForm form) {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("QR Code - " + form.getTitle());
 
-        String formUrl = "http://localhost:8080/form/" + form.getPublicToken();
+        var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
+        String formUrl = request.getScheme() + "://" + request.getServerName()
+                + (request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort())
+                + "/form/" + form.getPublicToken();
         byte[] qrBytes = qrCodeService.generateQrCode(formUrl, 300, 300);
 
-        StreamResource resource = new StreamResource("qr.png", () -> new ByteArrayInputStream(qrBytes));
-        Image qrImage = new Image(resource, "QR Code");
+        Image qrImage = new Image(
+                DownloadHandler.fromInputStream(event ->
+                        new DownloadResponse(new ByteArrayInputStream(qrBytes), "qr.png", "image/png", qrBytes.length)),
+                "QR Code");
         qrImage.setWidth("300px");
         qrImage.setHeight("300px");
 
@@ -158,9 +250,10 @@ public class DashboardView extends VerticalLayout {
                 return;
             }
             formService.createFormFromTemplate(
-                titleField.getValue().trim(),
-                speakerField.getValue().trim(),
-                topicField.getValue().trim()
+                    titleField.getValue().trim(),
+                    speakerField.getValue().trim(),
+                    topicField.getValue().trim(),
+                    getCurrentUserEmail()
             );
             dialog.close();
             refreshGrid();

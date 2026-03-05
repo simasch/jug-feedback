@@ -16,22 +16,26 @@ public class FormService {
     private final FeedbackQuestionRepository questionRepository;
     private final FeedbackResponseRepository responseRepository;
     private final FeedbackAnswerRepository answerRepository;
+    private final FormShareRepository formShareRepository;
 
     public FormService(FeedbackFormRepository formRepository,
                        FeedbackQuestionRepository questionRepository,
                        FeedbackResponseRepository responseRepository,
-                       FeedbackAnswerRepository answerRepository) {
+                       FeedbackAnswerRepository answerRepository,
+                       FormShareRepository formShareRepository) {
         this.formRepository = formRepository;
         this.questionRepository = questionRepository;
         this.responseRepository = responseRepository;
         this.answerRepository = answerRepository;
+        this.formShareRepository = formShareRepository;
     }
 
-    public FeedbackForm createFormFromTemplate(String title, String speakerName, String topic) {
+    public FeedbackForm createFormFromTemplate(String title, String speakerName, String topic, String ownerEmail) {
         FeedbackForm form = new FeedbackForm();
         form.setTitle(title);
         form.setSpeakerName(speakerName);
         form.setTopic(topic);
+        form.setOwnerEmail(ownerEmail);
         form = formRepository.save(form);
 
         String[][] templateQuestions = {
@@ -63,8 +67,8 @@ public class FormService {
     }
 
     @Transactional(readOnly = true)
-    public List<FeedbackForm> getAllForms() {
-        return formRepository.findAllByOrderByCreatedAtDesc();
+    public List<FeedbackForm> getFormsForUser(String email) {
+        return formRepository.findAllAccessibleByEmail(email);
     }
 
     @Transactional(readOnly = true)
@@ -75,6 +79,21 @@ public class FormService {
     @Transactional(readOnly = true)
     public Optional<FeedbackForm> getFormByPublicToken(String token) {
         return formRepository.findByPublicToken(token);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean hasAccess(Long formId, String email) {
+        return formRepository.findById(formId)
+                .map(form -> email.equals(form.getOwnerEmail())
+                        || formShareRepository.existsByFormIdAndSharedWithEmail(formId, email))
+                .orElse(false);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isOwner(Long formId, String email) {
+        return formRepository.findById(formId)
+                .map(form -> email.equals(form.getOwnerEmail()))
+                .orElse(false);
     }
 
     public FeedbackForm saveForm(FeedbackForm form) {
@@ -104,6 +123,26 @@ public class FormService {
             form.setStatus(FormStatus.PUBLIC);
             formRepository.save(form);
         });
+    }
+
+    public void shareForm(Long formId, String email) {
+        if (formShareRepository.existsByFormIdAndSharedWithEmail(formId, email)) {
+            return;
+        }
+        FeedbackForm form = formRepository.findById(formId).orElseThrow();
+        FormShare share = new FormShare();
+        share.setForm(form);
+        share.setSharedWithEmail(email);
+        formShareRepository.save(share);
+    }
+
+    public void unshareForm(Long formId, String email) {
+        formShareRepository.deleteByFormIdAndSharedWithEmail(formId, email);
+    }
+
+    @Transactional(readOnly = true)
+    public List<FormShare> getShares(Long formId) {
+        return formShareRepository.findByFormId(formId);
     }
 
     public FeedbackResponse submitResponse(Long formId, List<FeedbackAnswer> answers) {

@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Route("editor")
 @PageTitle("Form Editor - JUG Feedback")
@@ -37,6 +38,11 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
 
     @Override
     public void setParameter(BeforeEvent event, Long formId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!formService.hasAccess(formId, email)) {
+            event.forwardTo(DashboardView.class);
+            return;
+        }
         formService.getFormById(formId).ifPresent(form -> {
             currentForm = form;
             buildView();

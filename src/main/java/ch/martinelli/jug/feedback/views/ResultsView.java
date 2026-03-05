@@ -14,6 +14,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -32,6 +33,11 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
 
     @Override
     public void setParameter(BeforeEvent event, Long formId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!formService.hasAccess(formId, email)) {
+            event.forwardTo(DashboardView.class);
+            return;
+        }
         formService.getFormById(formId).ifPresent(this::buildView);
     }
 
