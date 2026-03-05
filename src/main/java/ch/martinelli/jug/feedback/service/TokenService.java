@@ -28,6 +28,8 @@ public class TokenService {
 
     @Transactional
     public void sendLoginCode(String email) {
+        tokenRepository.deleteByEmail(email);
+
         var code = String.format("%08d", random.nextInt(100_000_000));
         var token = new AccessToken();
         token.setEmail(email);
