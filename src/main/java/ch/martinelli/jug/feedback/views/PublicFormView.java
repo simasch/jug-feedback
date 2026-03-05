@@ -11,11 +11,13 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.textarea.TextArea;
-import com.vaadin.flow.router.*;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class PublicFormView extends VerticalLayout implements HasUrlParameter<St
 
         if (optForm.isEmpty()) {
             add(new H2("Form not found"),
-                new Paragraph("The requested form does not exist."));
+                    new Paragraph("The requested form does not exist."));
             return;
         }
 
@@ -55,7 +57,7 @@ public class PublicFormView extends VerticalLayout implements HasUrlParameter<St
 
         if (form.getStatus() != FormStatus.PUBLIC) {
             add(new H2("Form not available"),
-                new Paragraph("This form is not currently accepting responses."));
+                    new Paragraph("This form is not currently accepting responses."));
             return;
         }
 
@@ -134,6 +136,6 @@ public class PublicFormView extends VerticalLayout implements HasUrlParameter<St
 
         removeAll();
         add(new H2("Thank you!"),
-            new Paragraph("Your feedback has been submitted successfully."));
+                new Paragraph("Your feedback has been submitted successfully."));
     }
 }
