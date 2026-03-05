@@ -75,6 +75,36 @@ vaadin-combo-box::part(input-field):focus-within {
     background-color: #ffffff;
 }
 
+/* Touch-friendly radio buttons on mobile */
+@media (max-width: 600px) {
+    vaadin-radio-group.rating-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    vaadin-radio-group.rating-group vaadin-radio-button {
+        width: 100%;
+        min-height: 48px;
+        padding: 8px 12px;
+        margin-bottom: 4px;
+        border: 1px solid #DDDDDD;
+        border-radius: var(--lumo-border-radius-m);
+        background-color: #F9F9F9;
+        cursor: pointer;
+        transition: background-color 0.15s, border-color 0.15s;
+    }
+
+    vaadin-radio-group.rating-group vaadin-radio-button:hover {
+        background-color: rgba(147, 7, 34, 0.05);
+        border-color: #930722;
+    }
+
+    vaadin-radio-group.rating-group vaadin-radio-button[checked] {
+        background-color: rgba(147, 7, 34, 0.1);
+        border-color: #930722;
+    }
+}
+
 hr {
     border: none;
     border-top: 2px solid #BFBFBF;

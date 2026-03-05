@@ -87,6 +87,7 @@ public class PublicFormView extends VerticalLayout implements HasUrlParameter<St
 
             if (question.getQuestionType() == QuestionType.RATING) {
                 var ratingGroup = new RadioButtonGroup<Integer>();
+                ratingGroup.addClassName("rating-group");
                 ratingGroup.setItems(1, 2, 3, 4, 5);
                 ratingGroup.setItemLabelGenerator(i -> getTranslation("form.rating." + i));
                 add(ratingGroup);
