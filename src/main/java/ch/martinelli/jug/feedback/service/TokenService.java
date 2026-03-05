@@ -37,7 +37,7 @@ public class TokenService {
         tokenRepository.save(token);
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("simon.martinelli@jug.ch");
+        message.setFrom("simon@martinelli.ch");
         message.setTo(email);
         message.setSubject("JUG Feedback - Your Login Code");
         message.setText("Your login code is: " + code + "\n\nThis code expires in 10 minutes.");
