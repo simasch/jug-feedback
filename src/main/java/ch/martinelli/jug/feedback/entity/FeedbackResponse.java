@@ -4,10 +4,6 @@ import java.time.LocalDateTime;
 
 public record FeedbackResponse(Long id, Long formId, LocalDateTime submittedAt) {
 
-    public FeedbackResponse(Long formId) {
-        this(null, formId, LocalDateTime.now());
-    }
-
     public FeedbackResponse withId(Long id) {
         return new FeedbackResponse(id, formId, submittedAt);
     }

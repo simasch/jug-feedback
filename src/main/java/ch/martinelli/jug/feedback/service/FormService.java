@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,19 +36,19 @@ public class FormService {
         var form = formRepository.save(new FeedbackForm(title, speakerName, eventDate, location, ownerEmail));
 
         var templateQuestions = List.of(
-            new TemplateQuestion("Inhalt des Vortrags", QuestionType.RATING),
-            new TemplateQuestion("Präsentation und Aufbau", QuestionType.RATING),
-            new TemplateQuestion("Fachkompetenz des Referenten", QuestionType.RATING),
-            new TemplateQuestion("Verständlichkeit", QuestionType.RATING),
-            new TemplateQuestion("Praxisrelevanz", QuestionType.RATING),
-            new TemplateQuestion("Aktualität des Themas", QuestionType.RATING),
-            new TemplateQuestion("Tempo des Vortrags", QuestionType.RATING),
-            new TemplateQuestion("Interaktivität", QuestionType.RATING),
-            new TemplateQuestion("Gesamteindruck", QuestionType.RATING),
-            new TemplateQuestion("Was hat Ihnen besonders gut gefallen?", QuestionType.TEXT),
-            new TemplateQuestion("Was könnte verbessert werden?", QuestionType.TEXT),
-            new TemplateQuestion("Weitere Anmerkungen oder Vorschläge?", QuestionType.TEXT),
-            new TemplateQuestion("Welche Themen wünschen Sie sich für zukünftige Veranstaltungen?", QuestionType.TEXT)
+                new TemplateQuestion("Inhalt des Vortrags", QuestionType.RATING),
+                new TemplateQuestion("Präsentation und Aufbau", QuestionType.RATING),
+                new TemplateQuestion("Fachkompetenz des Referenten", QuestionType.RATING),
+                new TemplateQuestion("Verständlichkeit", QuestionType.RATING),
+                new TemplateQuestion("Praxisrelevanz", QuestionType.RATING),
+                new TemplateQuestion("Aktualität des Themas", QuestionType.RATING),
+                new TemplateQuestion("Tempo des Vortrags", QuestionType.RATING),
+                new TemplateQuestion("Interaktivität", QuestionType.RATING),
+                new TemplateQuestion("Gesamteindruck", QuestionType.RATING),
+                new TemplateQuestion("Was hat Ihnen besonders gut gefallen?", QuestionType.TEXT),
+                new TemplateQuestion("Was könnte verbessert werden?", QuestionType.TEXT),
+                new TemplateQuestion("Weitere Anmerkungen oder Vorschläge?", QuestionType.TEXT),
+                new TemplateQuestion("Welche Themen wünschen Sie sich für zukünftige Veranstaltungen?", QuestionType.TEXT)
         );
 
         for (var i = 0; i < templateQuestions.size(); i++) {
@@ -128,7 +129,7 @@ public class FormService {
     }
 
     public FeedbackResponse submitResponse(Long formId, List<FeedbackAnswer> answers) {
-        var response = responseRepository.save(new FeedbackResponse(formId));
+        var response = responseRepository.save(new FeedbackResponse(null, formId, LocalDateTime.now()));
 
         for (FeedbackAnswer answer : answers) {
             answerRepository.save(answer.withResponseId(response.id()));
@@ -152,5 +153,6 @@ public class FormService {
         return answerRepository.findByQuestionIdAndTextValueIsNotNull(questionId);
     }
 
-    private record TemplateQuestion(String text, QuestionType type) {}
+    private record TemplateQuestion(String text, QuestionType type) {
+    }
 }
