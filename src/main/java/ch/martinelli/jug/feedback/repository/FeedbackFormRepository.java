@@ -5,6 +5,7 @@ import ch.martinelli.jug.feedback.entity.FeedbackQuestion;
 import org.jooq.DSLContext;
 import org.jooq.Records;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class FeedbackFormRepository {
         this.dsl = dsl;
     }
 
+    @Transactional
     public FeedbackForm save(FeedbackForm form) {
         if (form.id() == null) {
             var id = dsl.insertInto(FEEDBACK_FORM)
@@ -119,6 +121,7 @@ public class FeedbackFormRepository {
                 .toList();
     }
 
+    @Transactional
     public void deleteById(Long id) {
         dsl.deleteFrom(FEEDBACK_FORM)
                 .where(FEEDBACK_FORM.ID.eq(id))

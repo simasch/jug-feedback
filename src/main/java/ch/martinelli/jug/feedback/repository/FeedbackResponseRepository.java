@@ -4,6 +4,7 @@ import ch.martinelli.jug.feedback.entity.FeedbackResponse;
 import org.jooq.DSLContext;
 import org.jooq.Records;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class FeedbackResponseRepository {
         this.dsl = dsl;
     }
 
+    @Transactional
     public FeedbackResponse save(FeedbackResponse response) {
         if (response.id() == null) {
             var id = dsl.insertInto(FEEDBACK_RESPONSE)

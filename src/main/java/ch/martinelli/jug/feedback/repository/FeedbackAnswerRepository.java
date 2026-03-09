@@ -5,6 +5,7 @@ import org.jooq.DSLContext;
 import org.jooq.Records;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class FeedbackAnswerRepository {
         this.dsl = dsl;
     }
 
+    @Transactional
     public FeedbackAnswer save(FeedbackAnswer answer) {
         if (answer.id() == null) {
             var id = dsl.insertInto(FEEDBACK_ANSWER)

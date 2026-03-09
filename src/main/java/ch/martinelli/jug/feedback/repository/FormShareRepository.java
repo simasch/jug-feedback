@@ -4,6 +4,7 @@ import ch.martinelli.jug.feedback.entity.FormShare;
 import org.jooq.DSLContext;
 import org.jooq.Records;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class FormShareRepository {
         this.dsl = dsl;
     }
 
+    @Transactional
     public FormShare save(FormShare share) {
         if (share.id() == null) {
             var id = dsl.insertInto(FORM_SHARE)
@@ -50,6 +52,7 @@ public class FormShareRepository {
                 .fetch(Records.mapping(FormShare::new));
     }
 
+    @Transactional
     public void deleteByFormIdAndSharedWithEmail(Long formId, String email) {
         dsl.deleteFrom(FORM_SHARE)
                 .where(FORM_SHARE.FORM_ID.eq(formId)

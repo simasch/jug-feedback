@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class FormService {
 
     private final FeedbackFormRepository formRepository;
@@ -32,6 +31,7 @@ public class FormService {
         this.formShareRepository = formShareRepository;
     }
 
+    @Transactional
     public FeedbackForm createFormFromTemplate(String title, String speakerName, LocalDate eventDate, String location, String ownerEmail) {
         var form = formRepository.save(new FeedbackForm(title, speakerName, eventDate, location, ownerEmail));
 
@@ -59,22 +59,18 @@ public class FormService {
         return formRepository.findById(form.id()).orElseThrow();
     }
 
-    @Transactional(readOnly = true)
     public List<FeedbackForm> getFormsForUser(String email) {
         return formRepository.findAllAccessibleByEmail(email);
     }
 
-    @Transactional(readOnly = true)
     public Optional<FeedbackForm> getFormById(Long id) {
         return formRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
     public Optional<FeedbackForm> getFormByPublicToken(String token) {
         return formRepository.findByPublicToken(token);
     }
 
-    @Transactional(readOnly = true)
     public boolean hasAccess(Long formId, String email) {
         return formRepository.findById(formId)
                 .map(form -> email.equals(form.ownerEmail())
@@ -82,36 +78,41 @@ public class FormService {
                 .orElse(false);
     }
 
-    @Transactional(readOnly = true)
     public boolean isOwner(Long formId, String email) {
         return formRepository.findById(formId)
                 .map(form -> email.equals(form.ownerEmail()))
                 .orElse(false);
     }
 
+    @Transactional
     public FeedbackForm saveForm(FeedbackForm form) {
         return formRepository.save(form);
     }
 
+    @Transactional
     public void deleteForm(Long id) {
         formRepository.deleteById(id);
     }
 
+    @Transactional
     public void publishForm(Long id) {
         formRepository.findById(id).ifPresent(form ->
                 formRepository.save(form.withStatus(FormStatus.PUBLIC)));
     }
 
+    @Transactional
     public void closeForm(Long id) {
         formRepository.findById(id).ifPresent(form ->
                 formRepository.save(form.withStatus(FormStatus.CLOSED)));
     }
 
+    @Transactional
     public void reopenForm(Long id) {
         formRepository.findById(id).ifPresent(form ->
                 formRepository.save(form.withStatus(FormStatus.PUBLIC)));
     }
 
+    @Transactional
     public void shareForm(Long formId, String email) {
         if (formShareRepository.existsByFormIdAndSharedWithEmail(formId, email)) {
             return;
@@ -119,15 +120,16 @@ public class FormService {
         formShareRepository.save(new FormShare(null, formId, email));
     }
 
+    @Transactional
     public void unshareForm(Long formId, String email) {
         formShareRepository.deleteByFormIdAndSharedWithEmail(formId, email);
     }
 
-    @Transactional(readOnly = true)
     public List<FormShare> getShares(Long formId) {
         return formShareRepository.findByFormId(formId);
     }
 
+    @Transactional
     public FeedbackResponse submitResponse(Long formId, List<FeedbackAnswer> answers) {
         var response = responseRepository.save(new FeedbackResponse(null, formId, LocalDateTime.now()));
 
@@ -138,17 +140,14 @@ public class FormService {
         return response;
     }
 
-    @Transactional(readOnly = true)
     public long getResponseCount(Long formId) {
         return responseRepository.countByFormId(formId);
     }
 
-    @Transactional(readOnly = true)
     public Double getAverageRating(Long questionId) {
         return answerRepository.findAverageRatingByQuestionId(questionId);
     }
 
-    @Transactional(readOnly = true)
     public List<FeedbackAnswer> getTextAnswers(Long questionId) {
         return answerRepository.findByQuestionIdAndTextValueIsNotNull(questionId);
     }

@@ -4,6 +4,7 @@ import ch.martinelli.jug.feedback.entity.AccessToken;
 import org.jooq.DSLContext;
 import org.jooq.Records;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ public class AccessTokenRepository {
         this.dsl = dsl;
     }
 
+    @Transactional
     public AccessToken save(AccessToken token) {
         if (token.id() == null) {
             var id = dsl.insertInto(ACCESS_TOKEN)
@@ -58,6 +60,7 @@ public class AccessTokenRepository {
                 .fetchOptional(Records.mapping(AccessToken::new));
     }
 
+    @Transactional
     public void deleteByEmail(String email) {
         dsl.deleteFrom(ACCESS_TOKEN)
                 .where(ACCESS_TOKEN.EMAIL.eq(email))
