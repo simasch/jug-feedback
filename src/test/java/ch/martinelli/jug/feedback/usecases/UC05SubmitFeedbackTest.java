@@ -68,7 +68,7 @@ class UC05SubmitFeedbackTest extends KaribuTest {
 
         // Fill in a text answer
         var textAreas = _find(TextArea.class);
-        _setValue(textAreas.get(0), "Great presentation!");
+        _setValue(textAreas.getFirst(), "Great presentation!");
 
         _click(_get(Button.class, spec -> spec.withText("Submit Feedback")));
 
