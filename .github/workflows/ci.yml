@@ -37,6 +37,6 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Test
-        run: mvn -B test -Pcoverage org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=simasch_jug-feedback
+        run: mvn -B test -Pcoverage sonar:sonar -Dsonar.projectKey=simasch_jug-feedback
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

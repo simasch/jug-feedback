@@ -24,6 +24,7 @@
         <testcontainers-mailpit.version>1.3.0</testcontainers-mailpit.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <karibu-testing.version>2.7.0</karibu-testing.version>
+        <sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
         <jacoco.version>0.8.14</jacoco.version>
         <sonar.organization>simasch</sonar.organization>
     </properties>
@@ -163,6 +164,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
