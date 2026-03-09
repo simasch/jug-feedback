@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
+import java.util.Objects;
 
 import static ch.martinelli.jug.feedback.jooq.Tables.ACCESS_TOKEN;
 import static com.github.mvysny.kaributesting.v10.LocatorJ.*;
@@ -116,7 +117,7 @@ class UC01LoginTest extends KaribuTest {
                 "uc01-login-flow@example.com", null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
         var request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
         request.setUserPrincipalInt(auth);
-        request.setUserInRole((_, role) -> List.of("USER").contains(role));
+        request.setUserInRole((_, role) -> Objects.equals("USER", role));
 
         _click(_get(Button.class, spec -> spec.withText("Login")));
 

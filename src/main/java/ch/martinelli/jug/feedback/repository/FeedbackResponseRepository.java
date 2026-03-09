@@ -38,17 +38,10 @@ public class FeedbackResponseRepository {
         }
     }
 
-    public List<FeedbackResponse> findByFormId(Long formId) {
-        return dsl.select(FEEDBACK_RESPONSE.ID, FEEDBACK_RESPONSE.FORM_ID, FEEDBACK_RESPONSE.SUBMITTED_AT)
-                .from(FEEDBACK_RESPONSE)
-                .where(FEEDBACK_RESPONSE.FORM_ID.eq(formId))
-                .fetch(Records.mapping((id, fId, submittedAt) -> new FeedbackResponse(id, fId, submittedAt)));
-    }
-
     public long countByFormId(Long formId) {
         return dsl.selectCount()
                 .from(FEEDBACK_RESPONSE)
                 .where(FEEDBACK_RESPONSE.FORM_ID.eq(formId))
-                .fetchOne(0, long.class);
+                .fetchOptionalInto(long.class).orElse(0L);
     }
 }

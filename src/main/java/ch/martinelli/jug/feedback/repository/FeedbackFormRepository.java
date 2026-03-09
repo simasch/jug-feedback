@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.groupingBy;
 @Repository
 public class FeedbackFormRepository {
 
-    private final DSLContext dsl;
+    private  final DSLContext dsl;
 
     public FeedbackFormRepository(DSLContext dsl) {
         this.dsl = dsl;
