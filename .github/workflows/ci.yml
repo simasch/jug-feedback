@@ -21,6 +21,13 @@ jobs:
           java-version: '25'
           distribution: 'adopt'
 
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
       - name: Cache local Maven repository
         uses: actions/cache@v5
         with:
@@ -30,5 +37,6 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Test
-        run: ./mvnw -B test
-
+        run: mvn -B test -Pcoverage org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=simasch_jug-feedback
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

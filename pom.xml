@@ -24,6 +24,17 @@
         <testcontainers-mailpit.version>1.3.0</testcontainers-mailpit.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <karibu-testing.version>2.7.0</karibu-testing.version>
+        <jacoco.version>0.8.14</jacoco.version>
+        <sonar.organization>simasch</sonar.organization>
+        <sonar.exclusions>
+            src/main/java/ch/martinelli/jug/feedback/Application.java,
+            src/main/frontend/generated/**,
+            src/main/java/ch/martinelli/jug/feedback/db/**/*.java
+        </sonar.exclusions>
+        <sonar.coverage.exclusions>
+            src/main/java/ch/martinelli/jug/feedback/**/*Builder.java,
+            src/main/java/ch/martinelli/jug/feedback/**/*Exception.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencyManagement>
@@ -164,4 +175,37 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>ch/martinelli/jug/feedback/Application.*</exclude>
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
