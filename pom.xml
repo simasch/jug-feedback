@@ -27,6 +27,11 @@
         <sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
         <jacoco.version>0.8.14</jacoco.version>
         <sonar.organization>martinellich</sonar.organization>
+        <sonar.exclusions>
+            src/main/java/ch/martinelli/jug/feedback/Application.java,
+            src/main/frontend/generated/**,
+            src/main/java/ch/martinelli/jug/feedback/jooq/**/*.java
+        </sonar.exclusions>
     </properties>
 
     <dependencyManagement>
