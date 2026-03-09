@@ -67,7 +67,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         }).setHeader(getTranslation("dashboard.column.access")).setAutoWidth(true);
         grid.addColumn(form -> getTranslation("dashboard.responses", formService.getResponseCount(form.getId())))
                 .setHeader(getTranslation("dashboard.column.responses")).setAutoWidth(true);
-        grid.addComponentColumn(this::createActionButtons).setHeader("").setAutoWidth(true);
+        grid.addComponentColumn(this::createActionButtons).setKey("actions").setHeader("").setAutoWidth(true);
         grid.setSizeFull();
 
         add(header, grid);

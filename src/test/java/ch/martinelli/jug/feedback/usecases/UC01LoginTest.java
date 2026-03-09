@@ -1,6 +1,7 @@
-package ch.martinelli.jug.feedback.views;
+package ch.martinelli.jug.feedback.usecases;
 
 import ch.martinelli.jug.feedback.KaribuTest;
+import ch.martinelli.jug.feedback.views.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -13,7 +14,7 @@ import static com.github.mvysny.kaributesting.v10.LocatorJ.*;
 import static com.github.mvysny.kaributesting.v10.NotificationsKt.expectNotifications;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class LoginViewTest extends KaribuTest {
+class UC01LoginTest extends KaribuTest {
 
     @Test
     void login_view_displays_email_field_and_send_code_button() {
