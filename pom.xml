@@ -26,15 +26,6 @@
         <karibu-testing.version>2.7.0</karibu-testing.version>
         <jacoco.version>0.8.14</jacoco.version>
         <sonar.organization>simasch</sonar.organization>
-        <sonar.exclusions>
-            src/main/java/ch/martinelli/jug/feedback/Application.java,
-            src/main/frontend/generated/**,
-            src/main/java/ch/martinelli/jug/feedback/db/**/*.java
-        </sonar.exclusions>
-        <sonar.coverage.exclusions>
-            src/main/java/ch/martinelli/jug/feedback/**/*Builder.java,
-            src/main/java/ch/martinelli/jug/feedback/**/*Exception.java
-        </sonar.coverage.exclusions>
     </properties>
 
     <dependencyManagement>
@@ -184,11 +175,6 @@
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>${jacoco.version}</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>ch/martinelli/jug/feedback/Application.*</exclude>
-                            </excludes>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
