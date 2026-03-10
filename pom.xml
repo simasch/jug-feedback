@@ -13,7 +13,7 @@
 
     <groupId>ch.martinelli.oss</groupId>
     <artifactId>feedback</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1-SNAPSHOT</version>
     <name>feedback</name>
     <description>Feedback Application</description>
 
