@@ -6,4 +6,4 @@ target
 
 .classpath
 .project
-jug-feedback.iml
+*.iml
