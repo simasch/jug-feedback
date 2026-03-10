@@ -1,32 +1,32 @@
-# Use Case: Formular wieder oeffnen
+# Use Case: Reopen Form
 
 ## Overview
 
 **Use Case ID:** UC-10
-**Use Case Name:** Formular wieder oeffnen
-**Primary Actor:** Formular-Besitzer
-**Goal:** Ein geschlossenes Formular wieder oeffnen, sodass erneut Feedbacks abgegeben werden koennen
+**Use Case Name:** Reopen Form
+**Primary Actor:** Form Owner
+**Goal:** Reopen a closed form so that feedback can be submitted again
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist authentifiziert
-- Formular ist im Status CLOSED
-- Benutzer ist Besitzer des Formulars
+- User is authenticated
+- Form is in CLOSED status
+- User is the owner of the form
 
 ## Main Success Scenario
 
-1. Benutzer klickt "Wieder oeffnen" im Dashboard
-2. System aendert Formularstatus von CLOSED auf PUBLIC
-3. Dashboard wird aktualisiert
+1. User clicks "Reopen" in the dashboard
+2. System changes form status from CLOSED to PUBLIC
+3. Dashboard is updated
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Formularstatus ist PUBLIC
-- Anonyme Benutzer koennen wieder Feedback abgeben
+- Form status is PUBLIC
+- Anonymous users can submit feedback again
 
 ### Failure Postconditions
 
-- Formularstatus bleibt CLOSED
+- Form status remains CLOSED

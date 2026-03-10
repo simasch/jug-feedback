@@ -1,55 +1,55 @@
-# Use Case: Formular bearbeiten
+# Use Case: Edit Form
 
 ## Overview
 
 **Use Case ID:** UC-03
-**Use Case Name:** Formular bearbeiten
-**Primary Actor:** Formular-Besitzer
-**Goal:** Details und Fragen eines Entwurfsformulars bearbeiten
+**Use Case Name:** Edit Form
+**Primary Actor:** Form Owner
+**Goal:** Edit the details and questions of a draft form
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist authentifiziert
-- Formular ist im Status DRAFT
-- Benutzer ist Besitzer des Formulars
+- User is authenticated
+- Form is in DRAFT status
+- User is the owner of the form
 
 ## Main Success Scenario
 
-1. Benutzer klickt "Bearbeiten" im Dashboard
-2. System prueft Zugriffsberechtigung
-3. System zeigt FormEditorView mit Formulardetails und Fragenliste
-4. Benutzer bearbeitet Titel, Speaker, Datum und/oder Ort
-5. Benutzer klickt "Speichern"
-6. System speichert Aenderungen und zeigt Erfolgsmeldung
+1. User clicks "Edit" in the dashboard
+2. System checks access permissions
+3. System displays FormEditorView with form details and question list
+4. User edits title, speaker, date, and/or location
+5. User clicks "Save"
+6. System saves changes and displays a success message
 
 ## Alternative Flows
 
-### A1: Kein Zugriff
+### A1: No Access
 
-**Trigger:** Benutzer ist nicht der Besitzer des Formulars
+**Trigger:** User is not the owner of the form
 **Flow:**
 
-1. System leitet zum Dashboard weiter
+1. System redirects to the dashboard
 
-### A2: Frage hinzufuegen
+### A2: Add Question
 
-**Trigger:** Benutzer moechte eine neue Frage zum Formular hinzufuegen
+**Trigger:** User wants to add a new question to the form
 **Flow:**
 
-1. Benutzer gibt Fragentext ein
-2. Benutzer waehlt Fragetyp (RATING oder TEXT)
-3. Benutzer klickt "Hinzufuegen"
-4. System ordnet naechsten orderIndex zu
-5. Frage erscheint in der Fragenliste
+1. User enters question text
+2. User selects question type (RATING or TEXT)
+3. User clicks "Add"
+4. System assigns the next orderIndex
+5. Question appears in the question list
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Formulardetails und/oder Fragen aktualisiert
+- Form details and/or questions updated
 
 ### Failure Postconditions
 
-- Formular bleibt unveraendert
-- Benutzer wird zum Dashboard weitergeleitet
+- Form remains unchanged
+- User is redirected to the dashboard

@@ -1,57 +1,57 @@
-# Use Case: Feedback-Formular erstellen
+# Use Case: Create Feedback Form
 
 ## Overview
 
 **Use Case ID:** UC-02
-**Use Case Name:** Feedback-Formular erstellen
-**Primary Actor:** Authentifizierter Benutzer
-**Goal:** Ein neues Feedback-Formular basierend auf einer Vorlage mit vordefinierten Fragen erstellen
+**Use Case Name:** Create Feedback Form
+**Primary Actor:** Authenticated User
+**Goal:** Create a new feedback form based on a template with predefined questions
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist authentifiziert
+- User is authenticated
 
 ## Main Success Scenario
 
-1. Benutzer klickt auf "Neu erstellen" im Dashboard
-2. System zeigt Dialog mit Eingabefeldern
-3. Benutzer gibt Titel ein (Pflichtfeld)
-4. Benutzer gibt optional Speaker, Datum und Ort ein
-5. Benutzer bestaetigt
-6. System erstellt Formular im Status DRAFT mit eindeutigem publicToken (UUID)
-7. System fuegt 13 Vorlagenfragen hinzu (9 Bewertung, 4 Text)
-8. Dashboard wird aktualisiert und Erfolgsmeldung angezeigt
+1. User clicks "Create New" in the dashboard
+2. System displays a dialog with input fields
+3. User enters the title (required field)
+4. User optionally enters speaker, date, and location
+5. User confirms
+6. System creates the form in DRAFT status with a unique publicToken (UUID)
+7. System adds 13 template questions (9 rating, 4 text)
+8. Dashboard is updated and a success message is displayed
 
 ## Alternative Flows
 
-### A1: Titel nicht ausgefuellt
+### A1: Title Not Filled In
 
-**Trigger:** Benutzer laesst das Pflichtfeld Titel leer
+**Trigger:** User leaves the required title field empty
 **Flow:**
 
-1. Validierung verhindert Erstellung
-2. Benutzer muss Titel eingeben
+1. Validation prevents creation
+2. User must enter a title
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Neues Formular im Status DRAFT erstellt
-- 13 Vorlagenfragen (9 Bewertung, 4 Text) zugeordnet
-- Benutzer ist Besitzer des Formulars
+- New form created in DRAFT status
+- 13 template questions (9 rating, 4 text) assigned
+- User is the owner of the form
 
 ### Failure Postconditions
 
-- Kein Formular wird erstellt
-- Dashboard bleibt unveraendert
+- No form is created
+- Dashboard remains unchanged
 
 ## Business Rules
 
-### BR-005: Vorlagenfragen
+### BR-005: Template Questions
 
-Jedes neue Formular erhaelt 9 Bewertungsfragen (RATING, Skala 1-5) und 4 Textfragen (TEXT, Freitext) als vordefinierte deutschsprachige Fragen zu Praesentationen
+Each new form receives 9 rating questions (RATING, scale 1-5) and 4 text questions (TEXT, free text) as predefined German-language questions about presentations
 
-### BR-006: Eindeutiger Public Token
+### BR-006: Unique Public Token
 
-Jedes Formular erhaelt einen eindeutigen publicToken (UUID) fuer den oeffentlichen Zugang
+Each form receives a unique publicToken (UUID) for public access

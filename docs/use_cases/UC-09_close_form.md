@@ -1,33 +1,33 @@
-# Use Case: Formular schliessen
+# Use Case: Close Form
 
 ## Overview
 
 **Use Case ID:** UC-09
-**Use Case Name:** Formular schliessen
-**Primary Actor:** Formular-Besitzer
-**Goal:** Ein oeffentliches Formular schliessen, sodass keine weiteren Feedbacks abgegeben werden koennen
+**Use Case Name:** Close Form
+**Primary Actor:** Form Owner
+**Goal:** Close a public form so that no further feedback can be submitted
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist authentifiziert
-- Formular ist im Status PUBLIC
-- Benutzer ist Besitzer des Formulars
+- User is authenticated
+- Form is in PUBLIC status
+- User is the owner of the form
 
 ## Main Success Scenario
 
-1. Benutzer klickt "Schliessen" im Dashboard
-2. System aendert Formularstatus von PUBLIC auf CLOSED
-3. Dashboard wird aktualisiert
+1. User clicks "Close" in the dashboard
+2. System changes form status from PUBLIC to CLOSED
+3. Dashboard is updated
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Formularstatus ist CLOSED
-- Keine neuen Feedbacks moeglich
-- Bestehende Ergebnisse bleiben erhalten
+- Form status is CLOSED
+- No new feedback submissions possible
+- Existing results are preserved
 
 ### Failure Postconditions
 
-- Formularstatus bleibt PUBLIC
+- Form status remains PUBLIC

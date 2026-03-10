@@ -3,22 +3,22 @@ left to right direction
 skinparam actorStyle awesome
 skinparam packageStyle rectangle
 
-actor "Anonymer\nBenutzer" as anon
-actor "Formular-\nBesitzer" as owner
-actor "Geteilter\nBenutzer" as shared
+actor "Anonymous\nUser" as anon
+actor "Form\nOwner" as owner
+actor "Shared\nUser" as shared
 
 rectangle "Feedback" {
-    usecase "UC-01\nAnmelden" as UC01
-    usecase "UC-02\nFormular erstellen" as UC02
-    usecase "UC-03\nFormular bearbeiten" as UC03
-    usecase "UC-04\nFormular\nveroeffentlichen" as UC04
-    usecase "UC-05\nFeedback abgeben" as UC05
-    usecase "UC-06\nErgebnisse anzeigen" as UC06
-    usecase "UC-07\nFormular teilen" as UC07
-    usecase "UC-08\nQR-Code generieren" as UC08
-    usecase "UC-09\nFormular schliessen" as UC09
-    usecase "UC-10\nFormular\nwieder oeffnen" as UC10
-    usecase "UC-11\nFormular loeschen" as UC11
+    usecase "UC-01\nLogin" as UC01
+    usecase "UC-02\nCreate Form" as UC02
+    usecase "UC-03\nEdit Form" as UC03
+    usecase "UC-04\nPublish Form" as UC04
+    usecase "UC-05\nSubmit Feedback" as UC05
+    usecase "UC-06\nView Results" as UC06
+    usecase "UC-07\nShare Form" as UC07
+    usecase "UC-08\nGenerate QR Code" as UC08
+    usecase "UC-09\nClose Form" as UC09
+    usecase "UC-10\nReopen Form" as UC10
+    usecase "UC-11\nDelete Form" as UC11
 }
 
 anon --> UC01

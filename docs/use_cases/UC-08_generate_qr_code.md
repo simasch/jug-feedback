@@ -1,45 +1,45 @@
-# Use Case: QR-Code generieren
+# Use Case: Generate QR Code
 
 ## Overview
 
 **Use Case ID:** UC-08
-**Use Case Name:** QR-Code generieren
-**Primary Actor:** Formular-Besitzer, Geteilter Benutzer
-**Goal:** Einen QR-Code fuer den oeffentlichen Formular-Link generieren
+**Use Case Name:** Generate QR Code
+**Primary Actor:** Form Owner, Shared User
+**Goal:** Generate a QR code for the public form link
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist authentifiziert
-- Benutzer hat Zugriff auf das Formular
+- User is authenticated
+- User has access to the form
 
 ## Main Success Scenario
 
-1. Benutzer klickt "QR-Code" im Dashboard
-2. System generiert QR-Code als PNG-Bild fuer die Formular-URL
-3. System zeigt Dialog mit QR-Code-Bild und URL
-4. Benutzer kann URL in die Zwischenablage kopieren
+1. User clicks "QR Code" in the dashboard
+2. System generates a QR code as a PNG image for the form URL
+3. System displays a dialog with the QR code image and URL
+4. User can copy the URL to the clipboard
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Keine Aenderungen am System
+- No changes to the system
 
 ### Failure Postconditions
 
-- Keine Aenderungen am System
+- No changes to the system
 
 ## Business Rules
 
-### BR-018: URL-Format
+### BR-018: URL Format
 
-URL-Format: `{scheme}://{server}:{port}/form/{publicToken}`
+URL format: `{scheme}://{server}:{port}/form/{publicToken}`
 
-### BR-019: QR-Code-Format
+### BR-019: QR Code Format
 
-QR-Code wird als PNG-Bild generiert (ZXing-Bibliothek)
+QR code is generated as a PNG image (ZXing library)
 
-### BR-020: Statusunabhaengige Verfuegbarkeit
+### BR-020: Status-Independent Availability
 
-QR-Code ist fuer alle Formularstatus verfuegbar (DRAFT, PUBLIC, CLOSED)
+QR code is available for all form statuses (DRAFT, PUBLIC, CLOSED)

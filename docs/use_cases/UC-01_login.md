@@ -1,74 +1,74 @@
-# Use Case: Anmelden
+# Use Case: Login
 
 ## Overview
 
 **Use Case ID:** UC-01
-**Use Case Name:** Anmelden
-**Primary Actor:** Anonymer Benutzer
-**Goal:** Per E-Mail-basiertem Login-Code anmelden
+**Use Case Name:** Login
+**Primary Actor:** Anonymous User
+**Goal:** Log in using an email-based login code
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist nicht authentifiziert
+- User is not authenticated
 
 ## Main Success Scenario
 
-1. Benutzer navigiert zu `/login`
-2. Benutzer gibt E-Mail-Adresse ein
-3. System loescht vorhandene Tokens fuer diese E-Mail
-4. System generiert 8-stelligen Login-Code
-5. System speichert AccessToken mit 10-Minuten-Ablaufzeit
-6. System sendet Code per E-Mail
-7. Benutzer gibt erhaltenen Code ein
-8. System validiert Code (nicht verwendet, nicht abgelaufen)
-9. System erstellt authentifizierte Session
-10. Benutzer wird zum Dashboard weitergeleitet
+1. User navigates to `/login`
+2. User enters email address
+3. System deletes existing tokens for this email
+4. System generates an 8-digit login code
+5. System stores AccessToken with a 10-minute expiration time
+6. System sends the code via email
+7. User enters the received code
+8. System validates the code (not used, not expired)
+9. System creates an authenticated session
+10. User is redirected to the dashboard
 
 ## Alternative Flows
 
-### A1: Ungueltiger Code
+### A1: Invalid Code
 
-**Trigger:** Benutzer gibt einen falschen Code ein
+**Trigger:** User enters an incorrect code
 **Flow:**
 
-1. System zeigt Fehlermeldung
-2. Benutzer kann Code erneut eingeben
+1. System displays an error message
+2. User can re-enter the code
 
-### A2: Abgelaufener Code
+### A2: Expired Code
 
-**Trigger:** Code ist aelter als 10 Minuten
+**Trigger:** Code is older than 10 minutes
 **Flow:**
 
-1. System zeigt Fehlermeldung
-2. Benutzer kann neuen Code anfordern
+1. System displays an error message
+2. User can request a new code
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Benutzer ist authentifiziert mit ROLE_USER
-- Session ist erstellt
+- User is authenticated with ROLE_USER
+- Session is created
 
 ### Failure Postconditions
 
-- Benutzer bleibt unauthentifiziert
-- Kein neuer Token wird verbraucht
+- User remains unauthenticated
+- No new token is consumed
 
 ## Business Rules
 
-### BR-001: Code-Format
+### BR-001: Code Format
 
-Code ist 8-stellig numerisch
+Code is 8 digits, numeric
 
-### BR-002: Code-Ablaufzeit
+### BR-002: Code Expiration Time
 
-Code laeuft nach 10 Minuten ab
+Code expires after 10 minutes
 
-### BR-003: Einmalige Verwendung
+### BR-003: Single Use
 
-Code kann nur einmal verwendet werden
+Code can only be used once
 
-### BR-004: Token-Bereinigung
+### BR-004: Token Cleanup
 
-Vorherige Tokens werden beim Anfordern eines neuen Codes geloescht
+Previous tokens are deleted when requesting a new code

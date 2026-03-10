@@ -1,85 +1,85 @@
-# Use Case: Formular teilen
+# Use Case: Share Form
 
 ## Overview
 
 **Use Case ID:** UC-07
-**Use Case Name:** Formular teilen
-**Primary Actor:** Formular-Besitzer
-**Goal:** Ein Formular fuer andere Benutzer freigeben
+**Use Case Name:** Share Form
+**Primary Actor:** Form Owner
+**Goal:** Share a form with other users
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist authentifiziert
-- Benutzer ist Besitzer des Formulars
+- User is authenticated
+- User is the owner of the form
 
 ## Main Success Scenario
 
-1. Benutzer klickt "Teilen" im Dashboard
-2. System zeigt Dialog mit aktuellen Freigaben
-3. Benutzer gibt E-Mail-Adresse ein
-4. Benutzer klickt "Hinzufuegen"
-5. System validiert E-Mail und erstellt FormShare
-6. Freigabeliste wird aktualisiert
+1. User clicks "Share" in the dashboard
+2. System displays a dialog with current shares
+3. User enters an email address
+4. User clicks "Add"
+5. System validates the email and creates a FormShare
+6. Share list is updated
 
 ## Alternative Flows
 
-### A1: Ungueltige E-Mail
+### A1: Invalid Email
 
-**Trigger:** E-Mail-Format ist ungueltig
+**Trigger:** Email format is invalid
 **Flow:**
 
-1. System zeigt Fehlermeldung
+1. System displays an error message
 
-### A2: E-Mail ist Formular-Besitzer
+### A2: Email Is Form Owner
 
-**Trigger:** Benutzer gibt seine eigene E-Mail-Adresse ein
+**Trigger:** User enters their own email address
 **Flow:**
 
-1. System zeigt Fehlermeldung (kann nicht mit sich selbst teilen)
+1. System displays an error message (cannot share with yourself)
 
-### A3: E-Mail bereits geteilt
+### A3: Email Already Shared
 
-**Trigger:** Freigabe fuer diese E-Mail existiert bereits
+**Trigger:** A share for this email already exists
 **Flow:**
 
-1. System verhindert Duplikat
+1. System prevents duplicate
 
-### A4: Freigabe entfernen
+### A4: Remove Share
 
-**Trigger:** Benutzer moechte eine bestehende Freigabe widerrufen
+**Trigger:** User wants to revoke an existing share
 **Flow:**
 
-1. Benutzer klickt "Entfernen" neben einer Freigabe
-2. System loescht FormShare
-3. Freigabeliste wird aktualisiert
+1. User clicks "Remove" next to a share
+2. System deletes the FormShare
+3. Share list is updated
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Geteilter Benutzer sieht das Formular in seinem Dashboard
-- Geteilter Benutzer kann Ergebnisse und QR-Code einsehen
+- Shared user sees the form in their dashboard
+- Shared user can view results and QR code
 
 ### Failure Postconditions
 
-- Keine Freigabe wird erstellt
-- Bestehende Freigaben bleiben unveraendert
+- No share is created
+- Existing shares remain unchanged
 
 ## Business Rules
 
-### BR-014: Nur Besitzer kann teilen
+### BR-014: Only Owner Can Share
 
-Nur der Besitzer kann ein Formular teilen
+Only the owner can share a form
 
-### BR-015: Keine Weiterfreigabe
+### BR-015: No Re-Sharing
 
-Geteilte Benutzer koennen nicht weiter teilen
+Shared users cannot share further
 
-### BR-016: E-Mail-Validierung
+### BR-016: Email Validation
 
-E-Mail-Format wird validiert
+Email format is validated
 
-### BR-017: Keine doppelten Freigaben
+### BR-017: No Duplicate Shares
 
-Eindeutige Einschraenkung auf (form_id, shared_with_email)
+Unique constraint on (form_id, shared_with_email)

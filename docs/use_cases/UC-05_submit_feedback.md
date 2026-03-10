@@ -1,73 +1,73 @@
-# Use Case: Feedback abgeben
+# Use Case: Submit Feedback
 
 ## Overview
 
 **Use Case ID:** UC-05
-**Use Case Name:** Feedback abgeben
-**Primary Actor:** Anonymer Benutzer
-**Goal:** Feedback ueber ein oeffentliches Formular abgeben
+**Use Case Name:** Submit Feedback
+**Primary Actor:** Anonymous User
+**Goal:** Submit feedback via a public form
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer hat den Formular-Link oder QR-Code
-- Formular existiert und ist im Status PUBLIC
+- User has the form link or QR code
+- Form exists and is in PUBLIC status
 
 ## Main Success Scenario
 
-1. Benutzer oeffnet `/form/{publicToken}` (via Link oder QR-Code)
-2. System laedt Formular anhand des Tokens
-3. System zeigt Formulartitel, Speaker, Datum und Ort an
-4. Fuer jede Frage:
-   - RATING: RadioButtonGroup mit Optionen 1-5 (lokalisierte Labels)
-   - TEXT: TextArea mit Platzhalter
-5. Benutzer fuellt das Formular aus
-6. Benutzer klickt "Absenden"
-7. System erstellt FeedbackResponse mit FeedbackAnswers
-8. System zeigt Dankesseite
+1. User opens `/form/{publicToken}` (via link or QR code)
+2. System loads the form using the token
+3. System displays the form title, speaker, date, and location
+4. For each question:
+   - RATING: RadioButtonGroup with options 1-5 (localized labels)
+   - TEXT: TextArea with placeholder
+5. User fills out the form
+6. User clicks "Submit"
+7. System creates FeedbackResponse with FeedbackAnswers
+8. System displays a thank-you page
 
 ## Alternative Flows
 
-### A1: Formular nicht gefunden
+### A1: Form Not Found
 
-**Trigger:** publicToken existiert nicht in der Datenbank
+**Trigger:** publicToken does not exist in the database
 **Flow:**
 
-1. System zeigt "Formular nicht gefunden" Meldung
+1. System displays "Form not found" message
 
-### A2: Formular nicht oeffentlich
+### A2: Form Not Public
 
-**Trigger:** Formular ist nicht im Status PUBLIC
+**Trigger:** Form is not in PUBLIC status
 **Flow:**
 
-1. System zeigt "Formular nicht verfuegbar" Meldung
+1. System displays "Form not available" message
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Neue FeedbackResponse mit FeedbackAnswers gespeichert
-- Dankesseite wird angezeigt
+- New FeedbackResponse with FeedbackAnswers saved
+- Thank-you page is displayed
 
 ### Failure Postconditions
 
-- Keine FeedbackResponse wird erstellt
-- Fehlermeldung wird angezeigt
+- No FeedbackResponse is created
+- Error message is displayed
 
 ## Business Rules
 
-### BR-007: Bewertungsskala
+### BR-007: Rating Scale
 
-Bewertungen sind 1-5 (Sehr schlecht bis Sehr gut)
+Ratings are 1-5 (Very poor to Very good)
 
-### BR-008: Optionale Textantworten
+### BR-008: Optional Text Answers
 
-Textantworten sind optional (nur nicht-leere werden gespeichert)
+Text answers are optional (only non-empty ones are saved)
 
-### BR-009: Neue Response pro Abgabe
+### BR-009: New Response Per Submission
 
-Jede Abgabe erzeugt eine neue FeedbackResponse
+Each submission creates a new FeedbackResponse
 
-### BR-010: Keine Authentifizierung
+### BR-010: No Authentication
 
-Keine Authentifizierung erforderlich fuer die Feedback-Abgabe
+No authentication required for submitting feedback

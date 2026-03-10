@@ -1,33 +1,33 @@
-# Use Case: Formular veroeffentlichen
+# Use Case: Publish Form
 
 ## Overview
 
 **Use Case ID:** UC-04
-**Use Case Name:** Formular veroeffentlichen
-**Primary Actor:** Formular-Besitzer
-**Goal:** Ein Entwurfsformular veroeffentlichen, sodass es oeffentlich zugaenglich wird
+**Use Case Name:** Publish Form
+**Primary Actor:** Form Owner
+**Goal:** Publish a draft form so that it becomes publicly accessible
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist authentifiziert
-- Formular ist im Status DRAFT
-- Benutzer ist Besitzer des Formulars
+- User is authenticated
+- Form is in DRAFT status
+- User is the owner of the form
 
 ## Main Success Scenario
 
-1. Benutzer klickt "Veroeffentlichen" im Dashboard
-2. System aendert Formularstatus von DRAFT auf PUBLIC
-3. Dashboard wird aktualisiert
+1. User clicks "Publish" in the dashboard
+2. System changes form status from DRAFT to PUBLIC
+3. Dashboard is updated
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Formularstatus ist PUBLIC
-- Formular ist ueber den oeffentlichen Link erreichbar
-- Anonyme Benutzer koennen Feedback abgeben
+- Form status is PUBLIC
+- Form is accessible via the public link
+- Anonymous users can submit feedback
 
 ### Failure Postconditions
 
-- Formularstatus bleibt DRAFT
+- Form status remains DRAFT

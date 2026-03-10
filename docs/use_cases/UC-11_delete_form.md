@@ -1,45 +1,45 @@
-# Use Case: Formular loeschen
+# Use Case: Delete Form
 
 ## Overview
 
 **Use Case ID:** UC-11
-**Use Case Name:** Formular loeschen
-**Primary Actor:** Formular-Besitzer
-**Goal:** Ein geschlossenes Formular dauerhaft loeschen
+**Use Case Name:** Delete Form
+**Primary Actor:** Form Owner
+**Goal:** Permanently delete a closed form
 **Status:** Implemented
 
 ## Preconditions
 
-- Benutzer ist authentifiziert
-- Formular ist im Status CLOSED
-- Benutzer ist Besitzer des Formulars
+- User is authenticated
+- Form is in CLOSED status
+- User is the owner of the form
 
 ## Main Success Scenario
 
-1. Benutzer klickt "Loeschen" im Dashboard
-2. System loescht Formular mit allen abhaengigen Daten (Kaskade)
-3. Dashboard wird aktualisiert
+1. User clicks "Delete" in the dashboard
+2. System deletes the form with all dependent data (cascade)
+3. Dashboard is updated
 
 ## Postconditions
 
 ### Success Postconditions
 
-- Formular und alle zugehoerigen Daten geloescht (Fragen, Antworten, Feedbacks, Freigaben)
+- Form and all associated data deleted (questions, answers, feedback responses, shares)
 
 ### Failure Postconditions
 
-- Formular bleibt unveraendert
+- Form remains unchanged
 
 ## Business Rules
 
-### BR-021: Nur geschlossene Formulare
+### BR-021: Only Closed Forms
 
-Loeschen ist nur fuer geschlossene Formulare moeglich
+Deletion is only possible for closed forms
 
-### BR-022: Nicht rueckgaengig machbar
+### BR-022: Irreversible
 
-Loeschen ist nicht rueckgaengig zu machen
+Deletion cannot be undone
 
-### BR-023: Kaskadierendes Loeschen
+### BR-023: Cascading Delete
 
-Kaskadierendes Loeschen aller abhaengigen Daten: Fragen, Antworten, Feedbacks, Freigaben
+Cascading deletion of all dependent data: questions, answers, feedback responses, shares
