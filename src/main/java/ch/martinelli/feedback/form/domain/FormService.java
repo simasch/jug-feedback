@@ -121,7 +121,7 @@ public class FormService {
 
     @Transactional
     public FeedbackResponse submitResponse(Long formId, List<FeedbackAnswer> answers) {
-        var response = responseRepository.save(new FeedbackResponse(null, formId, LocalDateTime.now()));
+        var response = responseRepository.insert(new FeedbackResponse(null, formId, LocalDateTime.now()));
 
         for (FeedbackAnswer answer : answers) {
             answerRepository.save(answer.withResponseId(response.id()));

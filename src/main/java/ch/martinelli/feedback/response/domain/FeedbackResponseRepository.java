@@ -16,22 +16,13 @@ public class FeedbackResponseRepository {
     }
 
     @Transactional
-    public FeedbackResponse save(FeedbackResponse response) {
-        if (response.id() == null) {
-            var id = dsl.insertInto(FEEDBACK_RESPONSE)
-                    .set(FEEDBACK_RESPONSE.FORM_ID, response.formId())
-                    .set(FEEDBACK_RESPONSE.SUBMITTED_AT, response.submittedAt())
-                    .returning(FEEDBACK_RESPONSE.ID)
-                    .fetchOne(FEEDBACK_RESPONSE.ID);
-            return response.withId(id);
-        } else {
-            dsl.update(FEEDBACK_RESPONSE)
-                    .set(FEEDBACK_RESPONSE.FORM_ID, response.formId())
-                    .set(FEEDBACK_RESPONSE.SUBMITTED_AT, response.submittedAt())
-                    .where(FEEDBACK_RESPONSE.ID.eq(response.id()))
-                    .execute();
-            return response;
-        }
+    public FeedbackResponse insert(FeedbackResponse response) {
+        var id = dsl.insertInto(FEEDBACK_RESPONSE)
+                .set(FEEDBACK_RESPONSE.FORM_ID, response.formId())
+                .set(FEEDBACK_RESPONSE.SUBMITTED_AT, response.submittedAt())
+                .returning(FEEDBACK_RESPONSE.ID)
+                .fetchOne(FEEDBACK_RESPONSE.ID);
+        return response.withId(id);
     }
 
     public long countByFormId(Long formId) {
