@@ -3,6 +3,7 @@ package ch.martinelli.feedback.form.ui;
 import ch.martinelli.feedback.form.domain.FeedbackForm;
 import ch.martinelli.feedback.form.domain.FeedbackQuestion;
 import ch.martinelli.feedback.form.domain.FormService;
+import ch.martinelli.feedback.form.domain.FormStatus;
 import ch.martinelli.feedback.form.domain.QuestionType;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -48,14 +49,17 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
     @Override
     public void setParameter(BeforeEvent event, Long formId) {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!formService.hasAccess(formId, email)) {
+        if (!formService.isOwner(formId, email)) {
             event.forwardTo("");
             return;
         }
-        formService.getFormById(formId).ifPresent(form -> {
-            currentForm = form;
-            buildView();
-        });
+        var form = formService.getFormById(formId).orElse(null);
+        if (form == null || form.status() != FormStatus.DRAFT) {
+            event.forwardTo("");
+            return;
+        }
+        currentForm = form;
+        buildView();
     }
 
     private void buildView() {

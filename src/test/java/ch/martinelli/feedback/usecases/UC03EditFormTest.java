@@ -108,6 +108,37 @@ class UC03EditFormTest extends KaribuTest {
     }
 
     @Test
+    @UseCase(id = "UC-03", scenario = "A1")
+    void shared_user_is_redirected_to_dashboard() {
+        formService.shareForm(formId, OTHER_EMAIL);
+        login(OTHER_EMAIL, List.of("USER"));
+        UI.getCurrent().navigate(FormEditorView.class, formId);
+
+        assertThat(UI.getCurrent().getInternals().getActiveViewLocation().getPath()).isEmpty();
+    }
+
+    @Test
+    @UseCase(id = "UC-03", scenario = "Precondition")
+    void public_form_owner_is_redirected_to_dashboard() {
+        formService.publishForm(formId);
+        login(OWNER_EMAIL, List.of("USER"));
+        UI.getCurrent().navigate(FormEditorView.class, formId);
+
+        assertThat(UI.getCurrent().getInternals().getActiveViewLocation().getPath()).isEmpty();
+    }
+
+    @Test
+    @UseCase(id = "UC-03", scenario = "Precondition")
+    void closed_form_owner_is_redirected_to_dashboard() {
+        formService.publishForm(formId);
+        formService.closeForm(formId);
+        login(OWNER_EMAIL, List.of("USER"));
+        UI.getCurrent().navigate(FormEditorView.class, formId);
+
+        assertThat(UI.getCurrent().getInternals().getActiveViewLocation().getPath()).isEmpty();
+    }
+
+    @Test
     @UseCase(id = "UC-03")
     void back_button_navigates_to_dashboard() {
         login(OWNER_EMAIL, List.of("USER"));

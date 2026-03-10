@@ -29,7 +29,7 @@
 | [UC-13](UC-13_create_form_from_template.md) | Create Form from Template | User               | Implemented |
 | [UC-14](UC-14_manage_templates.md) | Manage Templates      | Template Owner               | Implemented |
 | [UC-15](UC-15_export_results_pdf.md) | Export Results as PDF | Form Owner, Shared User      | Implemented |
-| [UC-16](UC-16_unpublish_form.md) | Unpublish Form | Form Owner                   | Planned |
+| [UC-16](UC-16_unpublish_form.md) | Unpublish Form | Form Owner                   | Implemented |
 
 ## Status Transitions
 

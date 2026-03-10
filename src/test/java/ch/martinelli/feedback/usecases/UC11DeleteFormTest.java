@@ -3,8 +3,12 @@ package ch.martinelli.feedback.usecases;
 import ch.martinelli.feedback.KaribuTest;
 import ch.martinelli.feedback.UseCase;
 import ch.martinelli.feedback.form.domain.FeedbackForm;
+import ch.martinelli.feedback.form.domain.FeedbackQuestion;
+import ch.martinelli.feedback.form.domain.FeedbackQuestionRepository;
 import ch.martinelli.feedback.form.domain.FormService;
+import ch.martinelli.feedback.form.domain.QuestionType;
 import ch.martinelli.feedback.form.ui.DashboardView;
+import ch.martinelli.feedback.response.domain.FeedbackAnswer;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -26,6 +30,9 @@ class UC11DeleteFormTest extends KaribuTest {
 
     @Autowired
     private FormService formService;
+
+    @Autowired
+    private FeedbackQuestionRepository questionRepository;
 
     private Long formId;
 
@@ -116,5 +123,21 @@ class UC11DeleteFormTest extends KaribuTest {
         UI.getCurrent().navigate(DashboardView.class);
 
         assertThat(findActionButtonForForm(publicForm.id(), "Delete")).isNull();
+    }
+
+    @Test
+    @UseCase(id = "UC-11", businessRules = "BR-023")
+    void delete_also_removes_responses_and_answers() {
+        var question = questionRepository.save(new FeedbackQuestion(null, formId, "Rating", QuestionType.RATING, 1));
+        formService.submitResponse(formId, List.of(new FeedbackAnswer(null, null, question.id(), 4, null)));
+        assertThat(formService.getResponseCount(formId)).isEqualTo(1);
+        assertThat(formService.getRatingDistribution(question.id())).isNotEmpty();
+
+        UI.getCurrent().navigate(DashboardView.class);
+        _click(findActionButtonForForm(formId, "Delete"));
+
+        assertThat(formService.getFormById(formId)).isEmpty();
+        assertThat(formService.getResponseCount(formId)).isZero();
+        assertThat(formService.getRatingDistribution(question.id())).isEmpty();
     }
 }

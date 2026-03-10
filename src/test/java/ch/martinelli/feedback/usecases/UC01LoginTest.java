@@ -141,4 +141,64 @@ class UC01LoginTest extends KaribuTest {
 
         assertThat(UI.getCurrent().getInternals().getActiveViewLocation().getPath()).isEmpty();
     }
+
+    @Test
+    @UseCase(id = "UC-01", businessRules = "BR-004")
+    void new_code_request_deletes_previous_tokens() {
+        var email = "uc01-token-cleanup@example.com";
+        UI.getCurrent().navigate(LoginView.class);
+
+        // Request first code
+        _setValue(_get(EmailField.class, spec -> spec.withLabel("Email")), email);
+        _click(_get(Button.class, spec -> spec.withText("Send Login Code")));
+
+        var firstCode = dsl.select(ACCESS_TOKEN.TOKEN)
+                .from(ACCESS_TOKEN)
+                .where(ACCESS_TOKEN.EMAIL.eq(email))
+                .fetchOne(ACCESS_TOKEN.TOKEN);
+        assertThat(firstCode).isNotNull();
+
+        // Navigate back to login and request a second code
+        UI.getCurrent().navigate(LoginView.class);
+        _setValue(_get(EmailField.class, spec -> spec.withLabel("Email")), email);
+        _click(_get(Button.class, spec -> spec.withText("Send Login Code")));
+
+        // The first code must no longer exist
+        var firstCodeStillExists = dsl.fetchExists(
+                dsl.selectOne().from(ACCESS_TOKEN)
+                        .where(ACCESS_TOKEN.EMAIL.eq(email))
+                        .and(ACCESS_TOKEN.TOKEN.eq(firstCode)));
+        assertThat(firstCodeStillExists).isFalse();
+
+        // Only one token for this email must exist
+        var tokenCount = dsl.fetchCount(ACCESS_TOKEN, ACCESS_TOKEN.EMAIL.eq(email));
+        assertThat(tokenCount).isEqualTo(1);
+    }
+
+    @Test
+    @UseCase(id = "UC-01", businessRules = "BR-003")
+    void used_token_cannot_be_used_again() {
+        var email = "uc01-single-use@example.com";
+        UI.getCurrent().navigate(LoginView.class);
+
+        _setValue(_get(EmailField.class, spec -> spec.withLabel("Email")), email);
+        _click(_get(Button.class, spec -> spec.withText("Send Login Code")));
+
+        var code = dsl.select(ACCESS_TOKEN.TOKEN)
+                .from(ACCESS_TOKEN)
+                .where(ACCESS_TOKEN.EMAIL.eq(email))
+                .fetchOne(ACCESS_TOKEN.TOKEN);
+
+        // Mark the token as used
+        dsl.update(ACCESS_TOKEN)
+                .set(ACCESS_TOKEN.USED, true)
+                .where(ACCESS_TOKEN.EMAIL.eq(email))
+                .execute();
+
+        // Try to use the already-used token
+        _setValue(_get(TextField.class, spec -> spec.withLabel("Login Code")), code);
+        _click(_get(Button.class, spec -> spec.withText("Login")));
+
+        expectNotifications("Login code sent! Check your inbox.", "Invalid or expired code");
+    }
 }
