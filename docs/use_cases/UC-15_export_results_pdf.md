@@ -21,7 +21,7 @@
    - Form title and speaker name
    - Export date
    - Total number of responses
-   - For each RATING question: question text, average rating, and number of ratings
+   - For each RATING question: question text, rating distribution chart, average rating, and number of ratings
    - For each TEXT question: question text and all non-empty text answers
 3. System downloads the PDF file to the user's device.
 4. System displays a success notification.
@@ -64,7 +64,7 @@ The PDF file name follows the pattern: `{form-title}_results.pdf` with special c
 
 ### BR-033: PDF Content Matches View
 
-The PDF content must match the data displayed in the results view (UC-06).
+The PDF content must match the data displayed in the results view (UC-06), including rating distribution charts.
 
 ### BR-034: Access Control
 

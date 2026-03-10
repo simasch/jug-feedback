@@ -20,7 +20,8 @@
 3. System displays form title, speaker, and number of responses
 4. For each RATING question:
    - Question text with number
-   - Average rating (2 decimal places) or "N/A"
+   - Rating distribution chart: horizontal bars showing count and percentage per rating value (5 to 1, highest first)
+   - Average rating (2 decimal places) and total number of ratings, or "N/A" if no ratings
 5. For each TEXT question:
    - Question text with number
    - List of all non-empty text answers as a bulleted list
@@ -65,3 +66,7 @@ Average calculation only includes non-null ratings
 ### BR-013: Empty Text Answers
 
 Empty text answers are not displayed
+
+### BR-014: Rating Distribution Chart
+
+For each rating question, the system displays a horizontal bar chart with one bar per rating value (1–5), ordered from 5 (highest) to 1 (lowest). Each bar shows the count and percentage of responses. Bar width is proportional to the count relative to the maximum count across all rating values for that question. The chart is rendered using pure CSS/HTML (no external charting library).
