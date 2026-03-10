@@ -2,9 +2,9 @@ package ch.martinelli.feedback.auth.ui;
 
 import ch.martinelli.feedback.auth.domain.TokenService;
 import ch.martinelli.feedback.form.ui.DashboardView;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.ShortcutRegistration;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H2;
@@ -89,7 +89,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver, Ha
     private void sendCode() {
         var email = emailField.getValue().trim();
         if (email.isEmpty() || emailField.isInvalid()) {
-            Notification.show(getTranslation("login.error.invalid-email"), 3000, Notification.Position.MIDDLE);
+            Notification.show(getTranslation("login.error.invalid-email"), 3000, Notification.Position.TOP_CENTER);
             return;
         }
 
@@ -104,13 +104,13 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver, Ha
         loginButton.addClickShortcut(Key.ENTER);
         codeField.focus();
 
-        Notification.show(getTranslation("login.code-sent"), 3000, Notification.Position.MIDDLE);
+        Notification.show(getTranslation("login.code-sent"), 3000, Notification.Position.TOP_CENTER);
     }
 
     private void authenticate() {
         var code = codeField.getValue().trim();
         if (code.isEmpty()) {
-            Notification.show(getTranslation("login.error.empty-code"), 3000, Notification.Position.MIDDLE);
+            Notification.show(getTranslation("login.error.empty-code"), 3000, Notification.Position.TOP_CENTER);
             return;
         }
 
@@ -129,7 +129,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver, Ha
 
             UI.getCurrent().navigate(DashboardView.class);
         } else {
-            Notification.show(getTranslation("login.error.invalid-code"), 3000, Notification.Position.MIDDLE);
+            Notification.show(getTranslation("login.error.invalid-code"), 3000, Notification.Position.TOP_CENTER);
             codeField.clear();
         }
     }

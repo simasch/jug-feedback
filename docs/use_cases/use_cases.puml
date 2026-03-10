@@ -23,6 +23,7 @@ rectangle "Feedback" {
     usecase "UC-12\nSave Form as Template" as UC12
     usecase "UC-13\nCreate Form from Template" as UC13
     usecase "UC-14\nManage Templates" as UC14
+    usecase "UC-16\nUnpublish Form" as UC16
 }
 
 anon --> UC01
@@ -38,6 +39,7 @@ owner --> UC09
 owner --> UC10
 owner --> UC11
 owner --> UC12
+owner --> UC16
 owner --> UC13
 
 towner --> UC14

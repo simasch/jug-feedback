@@ -59,11 +59,11 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
         removeAll();
 
         var backButton = new Button(getTranslation("results.back"),
-            e -> UI.getCurrent().navigate(DashboardView.class));
+                e -> UI.getCurrent().navigate(DashboardView.class));
 
         String fileName = form.title().replaceAll("[^a-zA-Z0-9\\-]", "_") + "_results.pdf";
         var exportPdfLink = new Anchor(
-                DownloadHandler.fromInputStream(event -> {
+                DownloadHandler.fromInputStream(_ -> {
                     byte[] pdfBytes = pdfExportService.generateResultsPdf(form, formService);
                     return new DownloadResponse(new ByteArrayInputStream(pdfBytes), fileName,
                             "application/pdf", pdfBytes.length);

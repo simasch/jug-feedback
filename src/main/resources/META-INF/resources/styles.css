@@ -113,3 +113,9 @@ hr {
     border-top: 2px solid #BFBFBF;
     margin: 10px 0;
 }
+
+a[theme~="badge"] {
+    text-transform: uppercase;
+    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+}
+
