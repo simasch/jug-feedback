@@ -49,7 +49,7 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
     public void setParameter(BeforeEvent event, Long formId) {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!formService.hasAccess(formId, email)) {
-            event.forwardTo(DashboardView.class);
+            event.forwardTo("");
             return;
         }
         formService.getFormById(formId).ifPresent(form -> {
@@ -62,7 +62,7 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
         removeAll();
 
         var backButton = new Button(getTranslation("editor.back"),
-            e -> UI.getCurrent().navigate(DashboardView.class));
+            e -> UI.getCurrent().navigate(""));
 
         var title = new H2(getTranslation("editor.title", currentForm.title()));
 

@@ -61,7 +61,7 @@ public class FeedbackAnswerRepository {
                 .fetch();
 
         var distribution = new LinkedHashMap<Integer, Long>();
-        for (int i = 5; i >= 1; i--) {
+        for (var i = 5; i >= 1; i--) {
             distribution.put(i, 0L);
         }
         for (var row : result) {

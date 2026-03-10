@@ -92,8 +92,8 @@ class UC15ExportResultsPdfTest extends KaribuTest {
 
         byte[] pdfBytes = pdfExportService.generateResultsPdf(form, formService);
 
-        assertThat(pdfBytes).isNotNull();
-        assertThat(pdfBytes).hasSizeGreaterThan(0);
+        assertThat(pdfBytes).isNotNull()
+                .hasSizeGreaterThan(0);
         // Verify it's a valid PDF (starts with %PDF)
         assertThat(new String(pdfBytes, 0, 4)).isEqualTo("%PDF");
     }
@@ -105,8 +105,8 @@ class UC15ExportResultsPdfTest extends KaribuTest {
 
         byte[] pdfBytes = pdfExportService.generateResultsPdf(form, formService);
 
-        assertThat(pdfBytes).isNotNull();
-        assertThat(pdfBytes).hasSizeGreaterThan(0);
+        assertThat(pdfBytes).isNotNull()
+                .hasSizeGreaterThan(0);
         assertThat(new String(pdfBytes, 0, 4)).isEqualTo("%PDF");
     }
 
@@ -139,8 +139,8 @@ class UC15ExportResultsPdfTest extends KaribuTest {
 
         byte[] pdfBytes = pdfExportService.generateResultsPdf(form, formService);
 
-        assertThat(pdfBytes).isNotNull();
-        assertThat(pdfBytes).hasSizeGreaterThan(0);
+        assertThat(pdfBytes).isNotNull()
+                .hasSizeGreaterThan(0);
         assertThat(new String(pdfBytes, 0, 4)).isEqualTo("%PDF");
     }
 }
