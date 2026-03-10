@@ -16,49 +16,23 @@ import java.util.Optional;
 public class FormService {
 
     private final FeedbackFormRepository formRepository;
-    private final FeedbackQuestionRepository questionRepository;
     private final FeedbackResponseRepository responseRepository;
     private final FeedbackAnswerRepository answerRepository;
     private final FormShareRepository formShareRepository;
 
     public FormService(FeedbackFormRepository formRepository,
-                       FeedbackQuestionRepository questionRepository,
                        FeedbackResponseRepository responseRepository,
                        FeedbackAnswerRepository answerRepository,
                        FormShareRepository formShareRepository) {
         this.formRepository = formRepository;
-        this.questionRepository = questionRepository;
         this.responseRepository = responseRepository;
         this.answerRepository = answerRepository;
         this.formShareRepository = formShareRepository;
     }
 
     @Transactional
-    public FeedbackForm createFormFromTemplate(String title, String speakerName, LocalDate eventDate, String location, String ownerEmail) {
-        var form = formRepository.save(new FeedbackForm(title, speakerName, eventDate, location, ownerEmail));
-
-        var templateQuestions = List.of(
-                new TemplateQuestion("Inhalt des Vortrags", QuestionType.RATING),
-                new TemplateQuestion("Präsentation und Aufbau", QuestionType.RATING),
-                new TemplateQuestion("Fachkompetenz des Referenten", QuestionType.RATING),
-                new TemplateQuestion("Verständlichkeit", QuestionType.RATING),
-                new TemplateQuestion("Praxisrelevanz", QuestionType.RATING),
-                new TemplateQuestion("Aktualität des Themas", QuestionType.RATING),
-                new TemplateQuestion("Tempo des Vortrags", QuestionType.RATING),
-                new TemplateQuestion("Interaktivität", QuestionType.RATING),
-                new TemplateQuestion("Gesamteindruck", QuestionType.RATING),
-                new TemplateQuestion("Was hat Ihnen besonders gut gefallen?", QuestionType.TEXT),
-                new TemplateQuestion("Was könnte verbessert werden?", QuestionType.TEXT),
-                new TemplateQuestion("Weitere Anmerkungen oder Vorschläge?", QuestionType.TEXT),
-                new TemplateQuestion("Welche Themen wünschen Sie sich für zukünftige Veranstaltungen?", QuestionType.TEXT)
-        );
-
-        for (var i = 0; i < templateQuestions.size(); i++) {
-            var tq = templateQuestions.get(i);
-            questionRepository.save(new FeedbackQuestion(null, form.id(), tq.text(), tq.type(), i + 1));
-        }
-
-        return formRepository.findById(form.id()).orElseThrow();
+    public FeedbackForm createForm(String title, String speakerName, LocalDate eventDate, String location, String ownerEmail) {
+        return formRepository.save(new FeedbackForm(title, speakerName, eventDate, location, ownerEmail));
     }
 
     public List<FeedbackForm> getFormsForUser(String email) {
@@ -154,6 +128,4 @@ public class FormService {
         return answerRepository.findByQuestionIdAndTextValueIsNotNull(questionId);
     }
 
-    private record TemplateQuestion(String text, QuestionType type) {
-    }
 }

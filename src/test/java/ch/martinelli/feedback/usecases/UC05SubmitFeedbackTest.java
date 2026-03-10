@@ -2,7 +2,7 @@ package ch.martinelli.feedback.usecases;
 
 import ch.martinelli.feedback.KaribuTest;
 import ch.martinelli.feedback.UseCase;
-import ch.martinelli.feedback.form.domain.FormService;
+import ch.martinelli.feedback.form.domain.*;
 import ch.martinelli.feedback.response.ui.PublicFormView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -26,14 +26,23 @@ class UC05SubmitFeedbackTest extends KaribuTest {
     @Autowired
     private FormService formService;
 
+    @Autowired
+    private FeedbackQuestionRepository questionRepository;
+
     private String publicToken;
     private Long formId;
 
     @BeforeEach
     void createPublicForm() {
-        var form = formService.createFormFromTemplate("Feedback Test", "Test Speaker", LocalDate.of(2026, 3, 15), "Zurich", OWNER_EMAIL);
+        var form = formService.createForm("Feedback Test", "Test Speaker", LocalDate.of(2026, 3, 15), "Zurich", OWNER_EMAIL);
         formId = form.id();
         publicToken = form.publicToken();
+
+        // Add questions: 2 RATING + 1 TEXT
+        questionRepository.save(new FeedbackQuestion(null, formId, "Content quality", QuestionType.RATING, 1));
+        questionRepository.save(new FeedbackQuestion(null, formId, "Speaker competence", QuestionType.RATING, 2));
+        questionRepository.save(new FeedbackQuestion(null, formId, "Additional comments", QuestionType.TEXT, 3));
+
         formService.publishForm(form.id());
     }
 
@@ -44,11 +53,11 @@ class UC05SubmitFeedbackTest extends KaribuTest {
 
         assertThat(_get(H2.class, spec -> spec.withText("Feedback Test")).isVisible()).isTrue();
 
-        // Should have 9 rating groups and 4 text areas
+        // Should have 2 rating groups and 1 text area
         var ratingGroups = _find(RadioButtonGroup.class);
         var textAreas = _find(TextArea.class);
-        assertThat(ratingGroups).hasSize(9);
-        assertThat(textAreas).hasSize(4);
+        assertThat(ratingGroups).hasSize(2);
+        assertThat(textAreas).hasSize(1);
 
         assertThat(_get(Button.class, spec -> spec.withText("Submit Feedback")).isVisible()).isTrue();
     }
@@ -101,7 +110,7 @@ class UC05SubmitFeedbackTest extends KaribuTest {
     @UseCase(id = "UC-05", scenario = "A2")
     void draft_form_shows_not_available() {
         // Create a draft form (not published)
-        var draftForm = formService.createFormFromTemplate("Draft Form", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
+        var draftForm = formService.createForm("Draft Form", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
 
         UI.getCurrent().navigate(PublicFormView.class, draftForm.publicToken());
 

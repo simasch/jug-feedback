@@ -75,7 +75,7 @@ class UC02CreateFormTest extends KaribuTest {
                 .orElseThrow();
         assertThat(createdForm.status().name()).isEqualTo("DRAFT");
         assertThat(createdForm.speakerName()).isEqualTo("John Doe");
-        assertThat(createdForm.questions()).hasSize(13);
+        assertThat(createdForm.questions()).isEmpty();
     }
 
     @Test
@@ -93,25 +93,17 @@ class UC02CreateFormTest extends KaribuTest {
     }
 
     @Test
-    @UseCase(id = "UC-02", businessRules = "BR-005")
-    void created_form_has_13_template_questions() {
-        formService.createFormFromTemplate("Template Test", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
+    @UseCase(id = "UC-02")
+    void created_form_starts_with_zero_questions() {
+        formService.createForm("Empty Form Test", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
 
         var forms = formService.getFormsForUser(OWNER_EMAIL);
         var form = forms.stream()
-                .filter(f -> "Template Test".equals(f.title()))
+                .filter(f -> "Empty Form Test".equals(f.title()))
                 .findFirst()
                 .orElseThrow();
 
-        assertThat(form.questions()).hasSize(13);
-        var ratingCount = form.questions().stream()
-                .filter(q -> q.questionType().name().equals("RATING"))
-                .count();
-        var textCount = form.questions().stream()
-                .filter(q -> q.questionType().name().equals("TEXT"))
-                .count();
-        assertThat(ratingCount).isEqualTo(9);
-        assertThat(textCount).isEqualTo(4);
+        assertThat(form.questions()).isEmpty();
     }
 
     @Test

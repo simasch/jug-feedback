@@ -20,8 +20,9 @@
 2. System checks access permissions
 3. System displays FormEditorView with form details and question list
 4. User edits title, speaker, date, and/or location
-5. User clicks "Save"
-6. System saves changes and displays a success message
+5. User adds questions (see A2)
+6. User clicks "Save"
+7. System saves changes and displays a success message
 
 ## Alternative Flows
 
@@ -38,7 +39,9 @@
 **Flow:**
 
 1. User enters question text
-2. User selects question type (RATING or TEXT)
+2. User selects question type:
+   - **RATING** — scale 1-5
+   - **TEXT** — free text (textarea)
 3. User clicks "Add"
 4. System assigns the next orderIndex
 5. Question appears in the question list

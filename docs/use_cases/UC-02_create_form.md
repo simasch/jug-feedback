@@ -5,7 +5,7 @@
 **Use Case ID:** UC-02
 **Use Case Name:** Create Feedback Form
 **Primary Actor:** Authenticated User
-**Goal:** Create a new feedback form based on a template with predefined questions
+**Goal:** Create a new empty feedback form in DRAFT status
 **Status:** Implemented
 
 ## Preconditions
@@ -19,9 +19,8 @@
 3. User enters the title (required field)
 4. User optionally enters speaker, date, and location
 5. User confirms
-6. System creates the form in DRAFT status with a unique publicToken (UUID)
-7. System adds 13 template questions (9 rating, 4 text)
-8. Dashboard is updated and a success message is displayed
+6. System creates the form in DRAFT status with a unique publicToken (UUID) and no questions
+7. Dashboard is updated and a success message is displayed
 
 ## Alternative Flows
 
@@ -37,9 +36,9 @@
 
 ### Success Postconditions
 
-- New form created in DRAFT status
-- 13 template questions (9 rating, 4 text) assigned
+- New form created in DRAFT status with 0 questions
 - User is the owner of the form
+- Questions can be added via the form editor (UC-03)
 
 ### Failure Postconditions
 
@@ -47,10 +46,6 @@
 - Dashboard remains unchanged
 
 ## Business Rules
-
-### BR-005: Template Questions
-
-Each new form receives 9 rating questions (RATING, scale 1-5) and 4 text questions (TEXT, free text) as predefined German-language questions about presentations
 
 ### BR-006: Unique Public Token
 

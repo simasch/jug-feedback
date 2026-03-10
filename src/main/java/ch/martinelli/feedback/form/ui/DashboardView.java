@@ -272,7 +272,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 titleField.setInvalid(true);
                 return;
             }
-            formService.createFormFromTemplate(
+            formService.createForm(
                     titleField.getValue().trim(),
                     speakerField.getValue().trim(),
                     dateField.getValue(),

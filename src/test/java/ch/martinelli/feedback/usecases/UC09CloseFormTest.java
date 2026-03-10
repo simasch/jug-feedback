@@ -34,7 +34,7 @@ class UC09CloseFormTest extends KaribuTest {
 
     @BeforeEach
     void createPublicForm() {
-        var form = formService.createFormFromTemplate("Close Test", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
+        var form = formService.createForm("Close Test", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
         formId = form.id();
         publicToken = form.publicToken();
         formService.publishForm(formId);

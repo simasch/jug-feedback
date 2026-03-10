@@ -35,7 +35,7 @@ class UC03EditFormTest extends KaribuTest {
 
     @BeforeEach
     void createTestForm() {
-        var form = formService.createFormFromTemplate("Original Title", "Original Speaker", LocalDate.of(2026, 1, 1), "Original Location", OWNER_EMAIL);
+        var form = formService.createForm("Original Title", "Original Speaker", LocalDate.of(2026, 1, 1), "Original Location", OWNER_EMAIL);
         formId = form.id();
     }
 
@@ -73,13 +73,13 @@ class UC03EditFormTest extends KaribuTest {
 
     @Test
     @UseCase(id = "UC-03")
-    void editor_shows_question_grid_with_template_questions() {
+    void editor_shows_empty_question_grid_for_new_form() {
         login(OWNER_EMAIL, List.of("USER"));
         UI.getCurrent().navigate(FormEditorView.class, formId);
 
         @SuppressWarnings("unchecked")
         var grid = _get(Grid.class);
-        assertThat(_size(grid)).isEqualTo(13);
+        assertThat(_size(grid)).isEqualTo(0);
     }
 
     @Test
@@ -94,7 +94,7 @@ class UC03EditFormTest extends KaribuTest {
         _click(_get(Button.class, spec -> spec.withText("Add Question")));
 
         var grid = _get(Grid.class);
-        assertThat(_size(grid)).isEqualTo(14);
+        assertThat(_size(grid)).isEqualTo(1);
     }
 
     @Test

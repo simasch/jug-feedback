@@ -2,7 +2,7 @@ package ch.martinelli.feedback.usecases;
 
 import ch.martinelli.feedback.KaribuTest;
 import ch.martinelli.feedback.UseCase;
-import ch.martinelli.feedback.form.domain.FormService;
+import ch.martinelli.feedback.form.domain.*;
 import ch.martinelli.feedback.response.domain.FeedbackAnswer;
 import ch.martinelli.feedback.response.ui.ResultsView;
 import com.vaadin.flow.component.UI;
@@ -30,12 +30,21 @@ class UC06ViewResultsTest extends KaribuTest {
     @Autowired
     private FormService formService;
 
+    @Autowired
+    private FeedbackQuestionRepository questionRepository;
+
     private Long formId;
 
     @BeforeEach
     void createFormWithResponses() {
-        var form = formService.createFormFromTemplate("Results Test", "Test Speaker", LocalDate.of(2026, 3, 15), "Zurich", OWNER_EMAIL);
+        var form = formService.createForm("Results Test", "Test Speaker", LocalDate.of(2026, 3, 15), "Zurich", OWNER_EMAIL);
         formId = form.id();
+
+        // Add questions: 2 RATING + 1 TEXT
+        questionRepository.save(new FeedbackQuestion(null, formId, "Content quality", QuestionType.RATING, 1));
+        questionRepository.save(new FeedbackQuestion(null, formId, "Speaker competence", QuestionType.RATING, 2));
+        questionRepository.save(new FeedbackQuestion(null, formId, "Additional comments", QuestionType.TEXT, 3));
+
         formService.publishForm(formId);
     }
 

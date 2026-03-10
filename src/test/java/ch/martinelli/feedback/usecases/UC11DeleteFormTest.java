@@ -31,7 +31,7 @@ class UC11DeleteFormTest extends KaribuTest {
 
     @BeforeEach
     void createClosedForm() {
-        var form = formService.createFormFromTemplate("Delete Test", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
+        var form = formService.createForm("Delete Test", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
         formId = form.id();
         formService.publishForm(formId);
         formService.closeForm(formId);
@@ -100,7 +100,7 @@ class UC11DeleteFormTest extends KaribuTest {
     @Test
     @UseCase(id = "UC-11", scenario = "Precondition", businessRules = "BR-021")
     void draft_form_does_not_show_delete_button() {
-        var draftForm = formService.createFormFromTemplate("Draft Form", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
+        var draftForm = formService.createForm("Draft Form", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
 
         UI.getCurrent().navigate(DashboardView.class);
 
@@ -110,7 +110,7 @@ class UC11DeleteFormTest extends KaribuTest {
     @Test
     @UseCase(id = "UC-11", scenario = "Precondition", businessRules = "BR-021")
     void public_form_does_not_show_delete_button() {
-        var publicForm = formService.createFormFromTemplate("Public Form", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
+        var publicForm = formService.createForm("Public Form", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
         formService.publishForm(publicForm.id());
 
         UI.getCurrent().navigate(DashboardView.class);

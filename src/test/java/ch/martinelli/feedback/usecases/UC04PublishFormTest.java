@@ -31,7 +31,7 @@ class UC04PublishFormTest extends KaribuTest {
 
     @BeforeEach
     void createDraftForm() {
-        var form = formService.createFormFromTemplate("Publish Test", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
+        var form = formService.createForm("Publish Test", "Speaker", LocalDate.now(), "Location", OWNER_EMAIL);
         formId = form.id();
         login(OWNER_EMAIL, List.of("USER"));
     }
