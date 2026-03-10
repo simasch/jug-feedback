@@ -6,7 +6,7 @@
 **Use Case Name:** Export Results as PDF
 **Primary Actor:** Form Owner, Shared User
 **Goal:** Export the feedback results of a form as a downloadable PDF document
-**Status:** Draft
+**Status:** Planned
 
 ## Preconditions
 
