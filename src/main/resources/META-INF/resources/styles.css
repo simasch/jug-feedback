@@ -29,12 +29,14 @@ h3 {
     color: #333333;
 }
 
+vaadin-button {
+    text-transform: uppercase;
+    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+}
+
 vaadin-button[theme~="primary"] {
     background-color: #930722;
     color: #ffffff;
-    text-transform: uppercase;
-    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
-    letter-spacing: 0.05em;
 }
 
 vaadin-button[theme~="primary"]:hover {
@@ -47,7 +49,6 @@ vaadin-grid::part(header-cell) {
     font-weight: bold;
     text-transform: uppercase;
     font-size: var(--lumo-font-size-s);
-    letter-spacing: 0.05em;
 }
 
 vaadin-grid::part(row):hover {

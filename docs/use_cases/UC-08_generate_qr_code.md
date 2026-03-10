@@ -17,7 +17,7 @@
 
 1. User clicks "QR Code" in the dashboard
 2. System generates a QR code as a PNG image for the form URL
-3. System displays a dialog with the QR code image and URL
+3. System displays a dialog with the QR code image and URL. The URL must be a link.
 4. User can copy the URL to the clipboard
 
 ## Postconditions

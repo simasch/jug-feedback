@@ -14,6 +14,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -226,8 +227,9 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         qrImage.setWidth("300px");
         qrImage.setHeight("300px");
 
-        var urlSpan = new Span(formUrl);
-        urlSpan.getStyle().set("word-break", "break-all");
+        var urlAnchor = new Anchor(formUrl, formUrl);
+        urlAnchor.setTarget("_blank");
+        urlAnchor.getStyle().set("word-break", "break-all");
 
         var copyButton = new Button(getTranslation("dashboard.qr.copy-url"));
         copyButton.getElement().executeJs("""
@@ -249,7 +251,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         copyButton.addClickListener(e ->
                 Notification.show(getTranslation("dashboard.qr.copied"), 2000, Notification.Position.BOTTOM_START));
 
-        var dialogContent = new VerticalLayout(qrImage, urlSpan, copyButton);
+        var dialogContent = new VerticalLayout(qrImage, urlAnchor, copyButton);
         dialogContent.setAlignItems(Alignment.CENTER);
 
         dialog.add(dialogContent);

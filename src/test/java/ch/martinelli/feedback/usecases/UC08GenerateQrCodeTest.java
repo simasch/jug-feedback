@@ -10,7 +10,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,11 +66,11 @@ class UC08GenerateQrCodeTest extends KaribuTest {
         // QR code image should be displayed
         assertThat(_get(Image.class).isVisible()).isTrue();
 
-        // URL should contain the public token
-        var urlSpan = _find(Span.class).stream()
-                .filter(s -> s.getText().contains(publicToken))
+        // URL should be a clickable link containing the public token
+        var urlAnchor = _find(Anchor.class).stream()
+                .filter(a -> a.getHref().contains(publicToken))
                 .findFirst();
-        assertThat(urlSpan).isPresent();
+        assertThat(urlAnchor).isPresent();
 
         // Copy URL button should be available
         assertThat(_get(Button.class, spec -> spec.withText("Copy URL")).isVisible()).isTrue();
