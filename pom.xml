@@ -30,7 +30,9 @@
         <sonar.exclusions>
             src/main/java/ch/martinelli/feedback/Application.java,
             src/main/frontend/generated/**,
-            src/main/java/ch/martinelli/feedback/jooq/**/*.java
+            src/main/java/ch/martinelli/feedback/db/**/*.java,
+            **/*.js
+            **/*.ts
         </sonar.exclusions>
     </properties>
 
