@@ -39,7 +39,7 @@
 - New form created in DRAFT status with 0 questions
 - User is the owner of the form
 - Questions can be added via the form editor (UC-03)
-
+/
 ### Failure Postconditions
 
 - No form is created
