@@ -2,14 +2,18 @@ package ch.martinelli.feedback.usecases;
 
 import ch.martinelli.feedback.KaribuTest;
 import ch.martinelli.feedback.UseCase;
-import ch.martinelli.feedback.form.domain.*;
+import ch.martinelli.feedback.form.domain.FeedbackQuestion;
+import ch.martinelli.feedback.form.domain.FeedbackQuestionRepository;
+import ch.martinelli.feedback.form.domain.FormService;
+import ch.martinelli.feedback.form.domain.QuestionType;
 import ch.martinelli.feedback.response.domain.FeedbackAnswer;
 import ch.martinelli.feedback.response.ui.ResultsView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +92,7 @@ class UC06ViewResultsTest extends KaribuTest {
         UI.getCurrent().navigate(ResultsView.class, formId);
 
         assertThat(_get(Paragraph.class, spec -> spec.withText("Total responses: 1")).isVisible()).isTrue();
-        var avgParagraphs = _find(Paragraph.class, spec -> spec.withText("Average rating: 4.00 / 5"));
+        var avgParagraphs = _find(Paragraph.class, spec -> spec.withText("Average rating: 4.00 / 5 (1 ratings)"));
         assertThat(avgParagraphs).isNotEmpty();
     }
 
@@ -113,6 +117,53 @@ class UC06ViewResultsTest extends KaribuTest {
                 .filter(p -> p.getText().contains("Excellent content!"))
                 .toList();
         assertThat(textParagraphs).isNotEmpty();
+    }
+
+    @Test
+    @UseCase(id = "UC-06", businessRules = "BR-014")
+    void results_show_rating_distribution_chart() {
+        var form = formService.getFormById(formId).orElseThrow();
+
+        // Submit 3 responses with different ratings
+        for (int rating : new int[]{5, 4, 4}) {
+            var answers = new ArrayList<FeedbackAnswer>();
+            for (var question : form.questions()) {
+                Integer ratingValue = null;
+                String textValue = null;
+                if (question.questionType() == QuestionType.RATING) {
+                    ratingValue = rating;
+                } else {
+                    textValue = "Comment " + rating;
+                }
+                answers.add(new FeedbackAnswer(null, null, question.id(), ratingValue, textValue));
+            }
+            formService.submitResponse(formId, answers);
+        }
+
+        login(OWNER_EMAIL, List.of("USER"));
+        UI.getCurrent().navigate(ResultsView.class, formId);
+
+        // Verify the rating distribution chart container exists
+        var chartDivs = _find(Div.class, spec -> spec.withClasses("rating-distribution"));
+        assertThat(chartDivs).hasSize(2); // 2 rating questions
+
+        // Verify rating labels (5, 4, 3, 2, 1) are present
+        var spans = _find(Span.class);
+        var ratingLabels = spans.stream()
+                .filter(s -> s.getText().matches("[1-5]"))
+                .toList();
+        // 2 questions x 5 ratings = 10 labels
+        assertThat(ratingLabels).hasSize(10);
+
+        // Verify count labels are present (e.g., "2 (67%)" for rating 4)
+        var countLabels = spans.stream()
+                .filter(s -> s.getText().matches("\\d+ \\(\\d+%\\)"))
+                .toList();
+        assertThat(countLabels).isNotEmpty();
+
+        // Verify average shows total count
+        var avgParagraphs = _find(Paragraph.class, spec -> spec.withText("Average rating: 4.33 / 5 (3 ratings)"));
+        assertThat(avgParagraphs).isNotEmpty();
     }
 
     @Test

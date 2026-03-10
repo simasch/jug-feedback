@@ -21,6 +21,7 @@
         <java.version>25</java.version>
         <vaadin.version>25.0.6</vaadin.version>
         <zxing.version>3.5.3</zxing.version>
+        <openpdf.version>2.0.3</openpdf.version>
         <testcontainers-mailpit.version>1.3.0</testcontainers-mailpit.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <karibu-testing.version>2.7.0</karibu-testing.version>
@@ -88,6 +89,12 @@
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
             <version>${zxing.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>${openpdf.version}</version>
         </dependency>
 
         <dependency>

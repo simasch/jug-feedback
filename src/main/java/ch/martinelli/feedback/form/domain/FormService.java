@@ -1,8 +1,8 @@
 package ch.martinelli.feedback.form.domain;
 
 import ch.martinelli.feedback.response.domain.FeedbackAnswer;
-import ch.martinelli.feedback.response.domain.FeedbackResponse;
 import ch.martinelli.feedback.response.domain.FeedbackAnswerRepository;
+import ch.martinelli.feedback.response.domain.FeedbackResponse;
 import ch.martinelli.feedback.response.domain.FeedbackResponseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -125,6 +126,10 @@ public class FormService {
 
     public Double getAverageRating(Long questionId) {
         return answerRepository.findAverageRatingByQuestionId(questionId);
+    }
+
+    public Map<Integer, Long> getRatingDistribution(Long questionId) {
+        return answerRepository.findRatingDistributionByQuestionId(questionId);
     }
 
     public List<FeedbackAnswer> getTextAnswers(Long questionId) {

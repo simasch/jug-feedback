@@ -6,7 +6,9 @@ import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ch.martinelli.feedback.db.tables.FeedbackAnswer.FEEDBACK_ANSWER;
 
@@ -48,6 +50,24 @@ public class FeedbackAnswerRepository {
                 .where(FEEDBACK_ANSWER.QUESTION_ID.eq(questionId)
                         .and(FEEDBACK_ANSWER.RATING_VALUE.isNotNull()))
                 .fetchOne(0, Double.class);
+    }
+
+    public Map<Integer, Long> findRatingDistributionByQuestionId(Long questionId) {
+        var result = dsl.select(FEEDBACK_ANSWER.RATING_VALUE, DSL.count())
+                .from(FEEDBACK_ANSWER)
+                .where(FEEDBACK_ANSWER.QUESTION_ID.eq(questionId)
+                        .and(FEEDBACK_ANSWER.RATING_VALUE.isNotNull()))
+                .groupBy(FEEDBACK_ANSWER.RATING_VALUE)
+                .fetch();
+
+        var distribution = new LinkedHashMap<Integer, Long>();
+        for (int i = 5; i >= 1; i--) {
+            distribution.put(i, 0L);
+        }
+        for (var record : result) {
+            distribution.put(record.value1(), record.value2().longValue());
+        }
+        return distribution;
     }
 
     public List<FeedbackAnswer> findByQuestionIdAndTextValueIsNotNull(Long questionId) {
