@@ -36,6 +36,8 @@ import java.io.ByteArrayInputStream;
 @PermitAll
 public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
+    private static final String CANCEL_KEY = "dashboard.create.cancel";
+
     private final transient FormService formService;
     private final transient QrCodeService qrCodeService;
     private final Grid<FeedbackForm> grid;
@@ -290,7 +292,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        var cancelButton = new Button(getTranslation("dashboard.create.cancel"), e -> dialog.close());
+        var cancelButton = new Button(getTranslation(CANCEL_KEY), e -> dialog.close());
 
         var content = new VerticalLayout(nameField);
         content.setPadding(false);
@@ -352,7 +354,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         });
         createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        var cancelButton = new Button(getTranslation("dashboard.create.cancel"), e -> dialog.close());
+        var cancelButton = new Button(getTranslation(CANCEL_KEY), e -> dialog.close());
 
         var content = new VerticalLayout(templateSelector, titleField, speakerField, dateField, locationField);
         content.setPadding(false);
@@ -400,7 +402,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         });
         createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        var cancelButton = new Button(getTranslation("dashboard.create.cancel"), e -> dialog.close());
+        var cancelButton = new Button(getTranslation(CANCEL_KEY), e -> dialog.close());
 
         var content = new VerticalLayout(titleField, speakerField, dateField, locationField);
         content.setPadding(false);

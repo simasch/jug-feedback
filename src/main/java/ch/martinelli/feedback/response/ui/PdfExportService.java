@@ -97,12 +97,7 @@ public class PdfExportService {
             labelCell.setPaddingRight(5);
             table.addCell(labelCell);
 
-            var barCell = new PdfPCell() {
-                @Override
-                public void setColumn(com.lowagie.text.pdf.ColumnText column) {
-                    super.setColumn(column);
-                }
-            };
+            var barCell = new PdfPCell();
             barCell.setBorder(0);
             barCell.setCellEvent((cell, position, canvases) -> {
                 var canvas = canvases[com.lowagie.text.pdf.PdfPTable.BACKGROUNDCANVAS];

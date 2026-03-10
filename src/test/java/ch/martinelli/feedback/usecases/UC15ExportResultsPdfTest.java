@@ -26,8 +26,6 @@ class UC15ExportResultsPdfTest extends KaribuTest {
 
     private static final String OWNER_EMAIL = "uc15-owner@example.com";
     private static final String SHARED_EMAIL = "uc15-shared@example.com";
-    private static final String OTHER_EMAIL = "uc15-other@example.com";
-
     @Autowired
     private FormService formService;
 
@@ -95,7 +93,7 @@ class UC15ExportResultsPdfTest extends KaribuTest {
         byte[] pdfBytes = pdfExportService.generateResultsPdf(form, formService);
 
         assertThat(pdfBytes).isNotNull();
-        assertThat(pdfBytes.length).isGreaterThan(0);
+        assertThat(pdfBytes).hasSizeGreaterThan(0);
         // Verify it's a valid PDF (starts with %PDF)
         assertThat(new String(pdfBytes, 0, 4)).isEqualTo("%PDF");
     }
@@ -108,7 +106,7 @@ class UC15ExportResultsPdfTest extends KaribuTest {
         byte[] pdfBytes = pdfExportService.generateResultsPdf(form, formService);
 
         assertThat(pdfBytes).isNotNull();
-        assertThat(pdfBytes.length).isGreaterThan(0);
+        assertThat(pdfBytes).hasSizeGreaterThan(0);
         assertThat(new String(pdfBytes, 0, 4)).isEqualTo("%PDF");
     }
 
@@ -142,7 +140,7 @@ class UC15ExportResultsPdfTest extends KaribuTest {
         byte[] pdfBytes = pdfExportService.generateResultsPdf(form, formService);
 
         assertThat(pdfBytes).isNotNull();
-        assertThat(pdfBytes.length).isGreaterThan(0);
+        assertThat(pdfBytes).hasSizeGreaterThan(0);
         assertThat(new String(pdfBytes, 0, 4)).isEqualTo("%PDF");
     }
 }

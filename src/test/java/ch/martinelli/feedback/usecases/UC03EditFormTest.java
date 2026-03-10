@@ -79,7 +79,7 @@ class UC03EditFormTest extends KaribuTest {
 
         @SuppressWarnings("unchecked")
         var grid = _get(Grid.class);
-        assertThat(_size(grid)).isEqualTo(0);
+        assertThat(_size(grid)).isZero();
     }
 
     @Test

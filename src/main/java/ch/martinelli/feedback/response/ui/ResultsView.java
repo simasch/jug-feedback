@@ -3,7 +3,6 @@ package ch.martinelli.feedback.response.ui;
 import ch.martinelli.feedback.form.domain.FeedbackForm;
 import ch.martinelli.feedback.form.domain.FormService;
 import ch.martinelli.feedback.form.domain.QuestionType;
-import ch.martinelli.feedback.form.ui.DashboardView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Anchor;
@@ -30,6 +29,9 @@ import java.util.Map;
 @PermitAll
 public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>, HasDynamicTitle {
 
+    private static final String WIDTH = "width";
+    private static final String FLEX_SHRINK = "flex-shrink";
+
     private final transient FormService formService;
     private final transient PdfExportService pdfExportService;
 
@@ -49,7 +51,7 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
     public void setParameter(BeforeEvent event, Long formId) {
         var email = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!formService.hasAccess(formId, email)) {
-            event.forwardTo(DashboardView.class);
+            event.forwardTo("");
             return;
         }
         formService.getFormById(formId).ifPresent(this::buildView);
@@ -59,7 +61,7 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
         removeAll();
 
         var backButton = new Button(getTranslation("results.back"),
-                e -> UI.getCurrent().navigate(DashboardView.class));
+                e -> UI.getCurrent().navigate(""));
 
         String fileName = form.title().replaceAll("[^a-zA-Z0-9\\-]", "_") + "_results.pdf";
         var exportPdfLink = new Anchor(
@@ -109,7 +111,7 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
         var chartContainer = new Div();
         chartContainer.addClassName("rating-distribution");
         chartContainer.getStyle()
-                .set("width", "100%")
+                .set(WIDTH, "100%")
                 .set("max-width", "500px")
                 .set("margin", "8px 0 12px 0");
 
@@ -125,19 +127,19 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
                     .set("align-items", "center")
                     .set("gap", "8px")
                     .set("margin-bottom", "4px")
-                    .set("width", "100%");
+                    .set(WIDTH, "100%");
 
             var label = new Span(String.valueOf(rating));
             label.getStyle()
                     .set("min-width", "16px")
                     .set("text-align", "right")
                     .set("font-weight", "bold")
-                    .set("flex-shrink", "0");
+                    .set(FLEX_SHRINK, "0");
 
             var barBackground = new Div();
             barBackground.getStyle()
                     .set("flex-grow", "1")
-                    .set("flex-shrink", "1")
+                    .set(FLEX_SHRINK, "1")
                     .set("flex-basis", "0%")
                     .set("background-color", "var(--lumo-contrast-10pct)")
                     .set("border-radius", "4px")
@@ -147,7 +149,7 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
 
             var bar = new Div();
             bar.getStyle()
-                    .set("width", String.format("%.1f%%", barWidth))
+                    .set(WIDTH, String.format("%.1f%%", barWidth))
                     .set("height", "100%")
                     .set("background-color", "var(--lumo-primary-color)")
                     .set("border-radius", "4px")
@@ -159,7 +161,7 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
             countLabel.getStyle()
                     .set("min-width", "80px")
                     .set("font-size", "var(--lumo-font-size-s)")
-                    .set("flex-shrink", "0");
+                    .set(FLEX_SHRINK, "0");
 
             row.add(label, barBackground, countLabel);
             chartContainer.add(row);

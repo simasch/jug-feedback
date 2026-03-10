@@ -64,8 +64,8 @@ public class FeedbackAnswerRepository {
         for (int i = 5; i >= 1; i--) {
             distribution.put(i, 0L);
         }
-        for (var record : result) {
-            distribution.put(record.value1(), record.value2().longValue());
+        for (var row : result) {
+            distribution.put(row.value1(), row.value2().longValue());
         }
         return distribution;
     }
