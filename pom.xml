@@ -35,6 +35,10 @@
             **/*.js
             **/*.ts
         </sonar.exclusions>
+        <sonar.coverage.exclusions>
+            src/main/java/ch/martinelli/feedback/**/*Configuration.java,
+            src/main/java/ch/martinelli/feedback/**/*Exception.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencyManagement>
