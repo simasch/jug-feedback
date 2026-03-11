@@ -107,7 +107,7 @@ public class FormService {
         if (formShareRepository.existsByFormIdAndSharedWithEmail(formId, email)) {
             return;
         }
-        formShareRepository.save(new FormShare(null, formId, email));
+        formShareRepository.insert(new FormShare(null, formId, email));
     }
 
     @Transactional
