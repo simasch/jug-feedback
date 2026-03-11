@@ -9,19 +9,22 @@ import ch.martinelli.feedback.form.domain.FormService;
 import ch.martinelli.feedback.form.domain.QuestionType;
 import ch.martinelli.feedback.form.ui.DashboardView;
 import ch.martinelli.feedback.response.domain.FeedbackAnswer;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
-import static com.github.mvysny.kaributesting.v10.GridKt.*;
-import static com.github.mvysny.kaributesting.v10.LocatorJ.*;
+import static com.github.mvysny.kaributesting.v10.GridKt._findAll;
+import static com.github.mvysny.kaributesting.v10.GridKt._getCellComponent;
+import static com.github.mvysny.kaributesting.v10.LocatorJ._click;
+import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UC11DeleteFormTest extends KaribuTest {
@@ -62,10 +65,17 @@ class UC11DeleteFormTest extends KaribuTest {
         Grid<FeedbackForm> grid = _get(Grid.class);
         int rowIndex = findFormRowIndex(targetFormId);
         if (rowIndex < 0) return null;
-        var actions = (HorizontalLayout) _getCellComponent(grid, rowIndex, "actions");
-        return actions.getChildren()
-                .filter(c -> c instanceof Button btn && text.equals(btn.getText()))
-                .map(c -> (Button) c)
+        var actions = _getCellComponent(grid, rowIndex, "actions");
+        return findButtonInComponent(actions, text);
+    }
+
+    private Button findButtonInComponent(Component component, String text) {
+        if (component instanceof Button btn && text.equals(btn.getText())) {
+            return btn;
+        }
+        return component.getChildren()
+                .map(child -> findButtonInComponent(child, text))
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
     }

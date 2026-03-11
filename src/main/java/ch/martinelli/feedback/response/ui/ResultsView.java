@@ -3,6 +3,7 @@ package ch.martinelli.feedback.response.ui;
 import ch.martinelli.feedback.form.domain.FeedbackForm;
 import ch.martinelli.feedback.form.domain.FormService;
 import ch.martinelli.feedback.form.domain.QuestionType;
+import ch.martinelli.feedback.ui.MaterialIcon;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Anchor;
@@ -65,6 +66,7 @@ public class ResultsView extends VerticalLayout implements HasUrlParameter<Long>
 
         var backButton = new Button(getTranslation("results.back"),
                 e -> UI.getCurrent().navigate(""));
+        backButton.setIcon(MaterialIcon.create("arrow_back"));
 
         String fileName = form.title().replaceAll("[^a-zA-Z0-9\\-]", "_") + "_results.pdf";
         var exportPdfLink = new Anchor(

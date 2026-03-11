@@ -6,27 +6,29 @@ import ch.martinelli.feedback.form.domain.FormStatus;
 import ch.martinelli.feedback.form.domain.FormTemplate;
 import ch.martinelli.feedback.form.domain.QrCodeService;
 import ch.martinelli.feedback.response.ui.ResultsView;
+import ch.martinelli.feedback.ui.MaterialIcon;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinServletRequest;
 import com.vaadin.flow.server.streams.DownloadHandler;
 import com.vaadin.flow.server.streams.DownloadResponse;
-import com.vaadin.flow.server.VaadinServletRequest;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -51,9 +53,11 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
         var title = new H2(getTranslation("dashboard.title"));
         var createButton = new Button(getTranslation("dashboard.create-new"), e -> showCreateDialog());
+        createButton.setIcon(MaterialIcon.create("add"));
         createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         var createFromTemplateButton = new Button(getTranslation("dashboard.create-from-template"), e -> showCreateFromTemplateDialog());
+        createFromTemplateButton.setIcon(MaterialIcon.create("content_copy"));
 
         var header = new HorizontalLayout(title, createButton, createFromTemplateButton);
         header.setAlignItems(Alignment.BASELINE);
@@ -75,7 +79,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         }).setHeader(getTranslation("dashboard.column.access")).setAutoWidth(true);
         grid.addColumn(form -> getTranslation("dashboard.responses", formService.getResponseCount(form.id())))
                 .setHeader(getTranslation("dashboard.column.responses")).setAutoWidth(true);
-        grid.addComponentColumn(this::createActionButtons).setKey("actions").setHeader("").setAutoWidth(true);
+        grid.addComponentColumn(this::createActionButtons).setKey("actions").setHeader("").setWidth("440px").setFlexGrow(0);
         grid.setSizeFull();
 
         add(header, grid);
@@ -95,71 +99,97 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         grid.setItems(formService.getFormsForUser(getCurrentUserEmail()));
     }
 
-    private HorizontalLayout createActionButtons(FeedbackForm form) {
-        var buttons = new HorizontalLayout();
+    private Component createActionButtons(FeedbackForm form) {
         var currentUser = getCurrentUserEmail();
         var isOwner = currentUser.equals(form.ownerEmail());
 
+        // Common actions: view & share
         var resultsButton = new Button(getTranslation("dashboard.action.results"), e -> UI.getCurrent().navigate(ResultsView.class, form.id()));
+        resultsButton.setIcon(MaterialIcon.create("bar_chart"));
         resultsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         var qrButton = new Button(getTranslation("dashboard.action.qr-code"), e -> showQrDialog(form));
+        qrButton.setIcon(MaterialIcon.create("qr_code_2"));
         qrButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
+        var commonRow = new HorizontalLayout(qrButton, resultsButton);
+        commonRow.setSpacing(true);
+        commonRow.setPadding(false);
+
         if (!isOwner) {
-            buttons.add(qrButton, resultsButton);
-            return buttons;
+            return commonRow;
         }
 
         var shareButton = new Button(getTranslation("dashboard.action.share"), e -> showShareDialog(form));
+        shareButton.setIcon(MaterialIcon.create("share"));
         shareButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         var templateButton = new Button(getTranslation("dashboard.action.save-template"), e -> showSaveAsTemplateDialog(form));
+        templateButton.setIcon(MaterialIcon.create("save"));
         templateButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+        var shareRow = new HorizontalLayout(shareButton, templateButton);
+        shareRow.setSpacing(true);
+        shareRow.setPadding(false);
+
+        // Status actions row
+        var statusRow = new HorizontalLayout();
+        statusRow.setSpacing(true);
+        statusRow.setPadding(false);
 
         if (form.status() == FormStatus.DRAFT) {
             var editButton = new Button(getTranslation("dashboard.action.edit"), e -> UI.getCurrent().navigate(FormEditorView.class, form.id()));
+            editButton.setIcon(MaterialIcon.create("edit"));
             editButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
             var publishButton = new Button(getTranslation("dashboard.action.publish"), e -> {
                 formService.publishForm(form.id());
                 refreshGrid();
             });
+            publishButton.setIcon(MaterialIcon.create("publish"));
             publishButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_SUCCESS);
-            buttons.add(editButton, publishButton, qrButton, resultsButton, shareButton, templateButton);
+            statusRow.add(editButton, publishButton);
         } else if (form.status() == FormStatus.PUBLIC) {
-            var closeButton = new Button(getTranslation("dashboard.action.close"), e -> {
-                formService.closeForm(form.id());
-                refreshGrid();
-            });
-            closeButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
-
             if (formService.getResponseCount(form.id()) == 0) {
                 var unpublishButton = new Button(getTranslation("dashboard.action.unpublish"), e -> {
                     formService.unpublishForm(form.id());
                     refreshGrid();
                 });
+                unpublishButton.setIcon(MaterialIcon.create("unpublished"));
                 unpublishButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-                buttons.add(unpublishButton);
+                statusRow.add(unpublishButton);
             }
 
-            buttons.add(closeButton, qrButton, resultsButton, shareButton, templateButton);
+            var closeButton = new Button(getTranslation("dashboard.action.close"), e -> {
+                formService.closeForm(form.id());
+                refreshGrid();
+            });
+            closeButton.setIcon(MaterialIcon.create("cancel"));
+            closeButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
+            statusRow.add(closeButton);
         } else {
             var reopenButton = new Button(getTranslation("dashboard.action.reopen"), e -> {
                 formService.reopenForm(form.id());
                 refreshGrid();
             });
+            reopenButton.setIcon(MaterialIcon.create("refresh"));
             reopenButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
             var deleteButton = new Button(getTranslation("dashboard.action.delete"), e -> {
                 formService.deleteForm(form.id());
                 refreshGrid();
             });
+            deleteButton.setIcon(MaterialIcon.create("delete"));
             deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
-            buttons.add(reopenButton, qrButton, resultsButton, shareButton, templateButton, deleteButton);
+            statusRow.add(reopenButton, deleteButton);
         }
 
-        return buttons;
+        var layout = new VerticalLayout(statusRow, commonRow, shareRow);
+        layout.addClassName("action-buttons");
+        layout.setSpacing(false);
+        layout.setPadding(false);
+        layout.getStyle().set("gap", "var(--lumo-space-xs)");
+        return layout;
     }
 
     private void showShareDialog(FeedbackForm form) {
@@ -178,11 +208,12 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             var row = new HorizontalLayout();
             row.setAlignItems(Alignment.CENTER);
             var emailSpan = new Span(share.sharedWithEmail());
-            var removeBtn = new Button(getTranslation("dashboard.share.remove"), e -> {
+            var removeBtn = new Button(getTranslation("dashboard.share.remove"), e1 -> {
                 formService.unshareForm(form.id(), share.sharedWithEmail());
                 dialog.close();
                 showShareDialog(form);
             });
+            removeBtn.setIcon(MaterialIcon.create("person_remove"));
             removeBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
             row.add(emailSpan, removeBtn);
             shareList.add(row);

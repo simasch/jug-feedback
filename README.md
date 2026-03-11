@@ -1,5 +1,8 @@
 # Feedback
 
+> **This project was fully developed using the [AI Unified Process](https://unifiedprocess.ai)** — a spec-driven software
+> development methodology that guides the entire lifecycle from requirements to deployment.
+
 A feedback collection application for events, built with Spring Boot, Vaadin, and jOOQ.
 
 ## Tech Stack

@@ -5,6 +5,7 @@ import ch.martinelli.feedback.form.domain.FeedbackQuestion;
 import ch.martinelli.feedback.form.domain.FormService;
 import ch.martinelli.feedback.form.domain.FormStatus;
 import ch.martinelli.feedback.form.domain.QuestionType;
+import ch.martinelli.feedback.ui.MaterialIcon;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -16,7 +17,10 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -67,6 +71,7 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
 
         var backButton = new Button(getTranslation("editor.back"),
             e -> UI.getCurrent().navigate(""));
+        backButton.setIcon(MaterialIcon.create("arrow_back"));
 
         var title = new H2(getTranslation("editor.title", currentForm.title()));
 
@@ -87,6 +92,7 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
         locationField.setWidth(FIELD_WIDTH);
 
         var saveButton = new Button(getTranslation("editor.save"), e -> saveFormDetails());
+        saveButton.setIcon(MaterialIcon.create("save"));
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         var formFields = new HorizontalLayout(titleField, speakerField, dateField, locationField, saveButton);
@@ -107,7 +113,7 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
         newQuestionType.setItems(QuestionType.values());
         newQuestionType.setValue(QuestionType.RATING);
 
-        var addQuestionBtn = new Button(getTranslation("editor.add-question"), e -> {
+        var addQuestionBtn = new Button(getTranslation("editor.add-question"), e1 -> {
             if (!newQuestionText.getValue().trim().isEmpty()) {
                 var q = new FeedbackQuestion(null, currentForm.id(),
                         newQuestionText.getValue().trim(), newQuestionType.getValue(),
@@ -121,6 +127,7 @@ public class FormEditorView extends VerticalLayout implements HasUrlParameter<Lo
                 newQuestionText.clear();
             }
         });
+        addQuestionBtn.setIcon(MaterialIcon.create("add"));
         addQuestionBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         var addQuestionLayout = new HorizontalLayout(newQuestionText, newQuestionType, addQuestionBtn);

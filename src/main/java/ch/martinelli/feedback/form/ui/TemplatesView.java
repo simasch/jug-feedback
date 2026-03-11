@@ -2,6 +2,7 @@ package ch.martinelli.feedback.form.ui;
 
 import ch.martinelli.feedback.form.domain.FormService;
 import ch.martinelli.feedback.form.domain.FormTemplate;
+import ch.martinelli.feedback.ui.MaterialIcon;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -73,6 +74,7 @@ public class TemplatesView extends VerticalLayout implements HasDynamicTitle {
         var buttons = new HorizontalLayout();
 
         var renameButton = new Button(getTranslation("templates.action.rename"), e -> showRenameDialog(template));
+        renameButton.setIcon(MaterialIcon.create("edit"));
         renameButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         var deleteButton = new Button(getTranslation("templates.action.delete"), e -> {
@@ -80,6 +82,7 @@ public class TemplatesView extends VerticalLayout implements HasDynamicTitle {
             refreshGrid();
             Notification.show(getTranslation("templates.delete.success"), 3000, Notification.Position.BOTTOM_START);
         });
+        deleteButton.setIcon(MaterialIcon.create("delete"));
         deleteButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
 
         buttons.add(renameButton, deleteButton);

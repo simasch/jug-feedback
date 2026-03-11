@@ -5,16 +5,17 @@ import ch.martinelli.feedback.UseCase;
 import ch.martinelli.feedback.form.domain.FeedbackForm;
 import ch.martinelli.feedback.form.domain.FormService;
 import ch.martinelli.feedback.form.ui.DashboardView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static com.github.mvysny.kaributesting.v10.GridKt._getCellComponent;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._click;
@@ -38,15 +39,22 @@ class UC04PublishFormTest extends KaribuTest {
     }
 
     @SuppressWarnings("unchecked")
-    private HorizontalLayout getActionButtons(int rowIndex) {
+    private Component getActionButtons(int rowIndex) {
         Grid<FeedbackForm> grid = _get(Grid.class);
-        return (HorizontalLayout) _getCellComponent(grid, rowIndex, "actions");
+        return _getCellComponent(grid, rowIndex, "actions");
     }
 
-    private Button findActionButton(HorizontalLayout actions, String text) {
-        return actions.getChildren()
-                .filter(c -> c instanceof Button btn && text.equals(btn.getText()))
-                .map(c -> (Button) c)
+    private Button findActionButton(Component actions, String text) {
+        return findButtonInComponent(actions, text);
+    }
+
+    private Button findButtonInComponent(Component component, String text) {
+        if (component instanceof Button btn && text.equals(btn.getText())) {
+            return btn;
+        }
+        return component.getChildren()
+                .map(child -> findButtonInComponent(child, text))
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
     }

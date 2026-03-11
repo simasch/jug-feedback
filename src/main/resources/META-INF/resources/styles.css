@@ -1,86 +1,200 @@
-html {
-    --lumo-primary-color: #930722;
-    --lumo-primary-color-50pct: rgba(147, 7, 34, 0.5);
-    --lumo-primary-color-10pct: rgba(147, 7, 34, 0.1);
-    --lumo-primary-text-color: #930722;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap");
 
-    --lumo-font-family: Arial, Helvetica, sans-serif;
-    --lumo-header-text-color: #333333;
-    --lumo-body-text-color: #333333;
+/* ==========================================================================
+   JUG Feedback — Modern Lumo Theme Overrides
+   ========================================================================== */
+
+/* ---------- 1. Color palette & base tokens ---------- */
+html {
+    --lumo-primary-color: #0d7377;
+    --lumo-primary-color-50pct: rgba(13, 115, 119, 0.5);
+    --lumo-primary-color-10pct: rgba(13, 115, 119, 0.1);
+    --lumo-primary-text-color: #0d7377;
+
+    --lumo-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    --lumo-header-text-color: #2c2c2e;
+    --lumo-body-text-color: #3a3a3c;
 
     --lumo-base-color: #ffffff;
-    --lumo-contrast-5pct: #F3F3F3;
+    --lumo-contrast-5pct: rgba(44, 44, 46, 0.05);
+    --lumo-contrast-10pct: rgba(44, 44, 46, 0.10);
+    --lumo-contrast-20pct: rgba(44, 44, 46, 0.20);
 
-    --lumo-border-radius-m: 4px;
-    --lumo-border-radius-l: 6px;
+    --lumo-border-radius-m: 8px;
+    --lumo-border-radius-l: 12px;
 }
 
+/* ---------- 2. Typography ---------- */
 h2 {
-    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #930722;
-    line-height: 120%;
+    font-family: "Outfit", sans-serif;
+    font-weight: 600;
+    color: #1a4a4d;
+    line-height: 1.2;
+    margin-bottom: var(--lumo-space-m);
 }
 
 h3 {
-    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
-    text-transform: uppercase;
-    color: #333333;
+    font-family: "Outfit", sans-serif;
+    font-weight: 600;
+    color: #2c2c2e;
+    margin-bottom: var(--lumo-space-s);
 }
 
+/* ---------- Material Symbols ---------- */
+.material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- 3. Buttons ---------- */
 vaadin-button {
-    text-transform: uppercase;
-    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 vaadin-button[theme~="primary"] {
-    background-color: #930722;
+    background-color: #0d7377;
     color: #ffffff;
+    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.3);
 }
 
 vaadin-button[theme~="primary"]:hover {
-    background-color: #9C0523;
+    background-color: #0a5c5f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 115, 119, 0.4);
+}
+
+vaadin-button[theme~="primary"]:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(13, 115, 119, 0.3);
+}
+
+vaadin-button:not([theme~="primary"]):hover {
+    color: #0d7377;
+    background-color: var(--lumo-primary-color-10pct);
+}
+
+/* ---------- 4. Grid ---------- */
+vaadin-grid {
+    border-radius: var(--lumo-border-radius-l);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
 vaadin-grid::part(header-cell) {
-    background-color: #930722;
-    color: #ffffff;
-    font-weight: bold;
-    text-transform: uppercase;
+    background-color: var(--lumo-contrast-5pct);
+    color: var(--lumo-header-text-color);
+    font-weight: 700;
+
     font-size: var(--lumo-font-size-s);
+    letter-spacing: 0.04em;
+}
+
+vaadin-grid::part(first-header-row-cell) {
+    border-bottom: 2px solid #0d7377;
 }
 
 vaadin-grid::part(row):hover {
-    background-color: rgba(147, 7, 34, 0.05);
+    background-color: var(--lumo-primary-color-10pct);
+    transition: background-color 0.15s ease;
 }
 
 vaadin-grid::part(cell) {
-    border-bottom: 1px solid #BFBFBF;
+    border-bottom: 1px solid var(--lumo-contrast-10pct);
 }
 
+/* ---------- 5. Form fields ---------- */
 vaadin-text-field::part(input-field),
 vaadin-email-field::part(input-field),
 vaadin-text-area::part(input-field),
-vaadin-combo-box::part(input-field) {
-    border: 1px solid #DDDDDD;
-    background-color: #F1F1F1;
+vaadin-combo-box::part(input-field),
+vaadin-date-picker::part(input-field) {
+    border: 1.5px solid var(--lumo-contrast-20pct);
+    background-color: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+vaadin-text-field::part(input-field):hover,
+vaadin-email-field::part(input-field):hover,
+vaadin-text-area::part(input-field):hover,
+vaadin-combo-box::part(input-field):hover,
+vaadin-date-picker::part(input-field):hover {
+    border-color: var(--lumo-primary-color-50pct);
 }
 
 vaadin-text-field::part(input-field):focus-within,
 vaadin-email-field::part(input-field):focus-within,
 vaadin-text-area::part(input-field):focus-within,
-vaadin-combo-box::part(input-field):focus-within {
-    border-color: #930722;
-    box-shadow: 0 0 0 1px #930722;
+vaadin-combo-box::part(input-field):focus-within,
+vaadin-date-picker::part(input-field):focus-within {
+    border-color: #0d7377;
+    box-shadow: 0 0 0 3px var(--lumo-primary-color-10pct);
     background-color: #ffffff;
 }
 
-/* Touch-friendly radio buttons on mobile */
+/* ---------- 6. Dialogs ---------- */
+vaadin-dialog-overlay::part(overlay) {
+    border-radius: var(--lumo-border-radius-l);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    border: 1px solid var(--lumo-contrast-10pct);
+}
+
+vaadin-dialog-overlay::part(backdrop) {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+vaadin-dialog-overlay::part(header) {
+    border-bottom: 1px solid var(--lumo-contrast-10pct);
+}
+
+vaadin-dialog-overlay::part(footer) {
+    border-top: 1px solid var(--lumo-contrast-10pct);
+}
+
+/* ---------- 7. Notifications ---------- */
+vaadin-notification-card {
+    border-radius: var(--lumo-border-radius-m);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- 8. HR dividers ---------- */
+hr {
+    border: none;
+    border-top: 1px solid var(--lumo-contrast-10pct);
+    margin: var(--lumo-space-l) 0;
+}
+
+/* ---------- 9. Rating distribution container ---------- */
+.rating-distribution {
+    background-color: var(--lumo-contrast-5pct);
+    padding: var(--lumo-space-m);
+    border-radius: var(--lumo-border-radius-l);
+}
+
+/* ---------- 10. Dashboard action buttons ---------- */
+.action-buttons vaadin-button {
+    min-width: 200px;
+}
+
+/* ---------- 11. Mobile radio buttons ---------- */
 @media (max-width: 600px) {
     vaadin-radio-group.rating-group {
         display: flex;
         flex-direction: column;
+        gap: var(--lumo-space-xs);
     }
 
     vaadin-radio-group.rating-group vaadin-radio-button {
@@ -89,33 +203,86 @@ vaadin-combo-box::part(input-field):focus-within {
         padding: 8px 12px;
         display: flex;
         align-items: center;
-        margin-bottom: 4px;
-        border: 1px solid #DDDDDD;
+        border: 1.5px solid var(--lumo-contrast-20pct);
         border-radius: var(--lumo-border-radius-m);
-        background-color: #F9F9F9;
+        background-color: var(--lumo-base-color);
         cursor: pointer;
-        transition: background-color 0.15s, border-color 0.15s;
+        transition: background-color 0.2s ease, border-color 0.2s ease,
+            box-shadow 0.2s ease;
     }
 
     vaadin-radio-group.rating-group vaadin-radio-button:hover {
-        background-color: rgba(147, 7, 34, 0.05);
-        border-color: #930722;
+        background-color: var(--lumo-primary-color-10pct);
+        border-color: var(--lumo-primary-color-50pct);
     }
 
     vaadin-radio-group.rating-group vaadin-radio-button[checked] {
-        background-color: rgba(147, 7, 34, 0.1);
-        border-color: #930722;
+        background-color: var(--lumo-primary-color-10pct);
+        border-color: #0d7377;
+        box-shadow: 0 0 0 2px var(--lumo-primary-color-10pct);
     }
 }
 
-hr {
-    border: none;
-    border-top: 2px solid #BFBFBF;
-    margin: 10px 0;
-}
+/* ---------- 12. Dark mode ---------- */
+@media (prefers-color-scheme: dark) {
+    html {
+        --lumo-base-color: #1c1c1e;
+        --lumo-header-text-color: #e5e5e7;
+        --lumo-body-text-color: #d1d1d6;
+        --lumo-primary-color: #2ec4b6;
+        --lumo-primary-color-50pct: rgba(46, 196, 182, 0.5);
+        --lumo-primary-color-10pct: rgba(46, 196, 182, 0.1);
+        --lumo-primary-text-color: #2ec4b6;
+        --lumo-contrast-5pct: rgba(255, 255, 255, 0.05);
+        --lumo-contrast-10pct: rgba(255, 255, 255, 0.10);
+        --lumo-contrast-20pct: rgba(255, 255, 255, 0.20);
+    }
 
-a[theme~="badge"] {
-    text-transform: uppercase;
-    font-family: "Trade Gothic W02 Cn 18", "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
-}
+    h2 {
+        color: #2ec4b6;
+    }
 
+    h3 {
+        color: #e5e5e7;
+    }
+
+    vaadin-text-field::part(input-field),
+    vaadin-email-field::part(input-field),
+    vaadin-text-area::part(input-field),
+    vaadin-combo-box::part(input-field),
+    vaadin-date-picker::part(input-field) {
+        background-color: #2c2c2e;
+    }
+
+    vaadin-text-field::part(input-field):focus-within,
+    vaadin-email-field::part(input-field):focus-within,
+    vaadin-text-area::part(input-field):focus-within,
+    vaadin-combo-box::part(input-field):focus-within,
+    vaadin-date-picker::part(input-field):focus-within {
+        background-color: #3a3a3c;
+        border-color: #2ec4b6;
+    }
+
+    vaadin-grid {
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    vaadin-button[theme~="primary"] {
+        background-color: #2ec4b6;
+        color: #1c1c1e;
+        box-shadow: 0 2px 8px rgba(46, 196, 182, 0.3);
+    }
+
+    vaadin-button[theme~="primary"]:hover {
+        background-color: #3dd4c6;
+        box-shadow: 0 4px 12px rgba(46, 196, 182, 0.4);
+    }
+
+    vaadin-dialog-overlay::part(overlay) {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    vaadin-grid::part(first-header-row-cell) {
+        border-bottom-color: #2ec4b6;
+    }
+}

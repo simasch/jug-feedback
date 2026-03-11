@@ -5,19 +5,20 @@ import ch.martinelli.feedback.UseCase;
 import ch.martinelli.feedback.form.domain.FeedbackForm;
 import ch.martinelli.feedback.form.domain.FormService;
 import ch.martinelli.feedback.form.ui.DashboardView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static com.github.mvysny.kaributesting.v10.GridKt._getCellComponent;
 import static com.github.mvysny.kaributesting.v10.LocatorJ.*;
@@ -44,12 +45,23 @@ class UC08GenerateQrCodeTest extends KaribuTest {
     @SuppressWarnings("unchecked")
     private Button findActionButton(String text) {
         Grid<FeedbackForm> grid = _get(Grid.class);
-        var actions = (HorizontalLayout) _getCellComponent(grid, 0, "actions");
-        return actions.getChildren()
-                .filter(c -> c instanceof Button btn && text.equals(btn.getText()))
-                .map(c -> (Button) c)
+        var actions = _getCellComponent(grid, 0, "actions");
+        var button = findButtonInComponent(actions, text);
+        if (button == null) {
+            throw new AssertionError("Button '" + text + "' not found");
+        }
+        return button;
+    }
+
+    private Button findButtonInComponent(Component component, String text) {
+        if (component instanceof Button btn && text.equals(btn.getText())) {
+            return btn;
+        }
+        return component.getChildren()
+                .map(child -> findButtonInComponent(child, text))
+                .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(() -> new AssertionError("Button '" + text + "' not found"));
+                .orElse(null);
     }
 
     @Test
